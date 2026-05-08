@@ -6,24 +6,91 @@
 - IBM Bob installed and running
 - Access to an IBM i system with Mapepire server running (port 8076)
 - Basic familiarity with command line
-**Version:** version 2 updated on April 1, 2026
+**Version:** version 3 updated on May 8, 2026
 
 ## Lab Overview
 
-In this hands-on lab, you'll configure IBM Bob to work with IBM i systems using the Model Context Protocol (MCP). You'll set up custom modes, connect to your IBM i system, and execute your first queries using Bob's AI-powered interface. 
+In this hands-on lab, you'll configure IBM Bob to work with IBM i systems using the Model Context Protocol (MCP). You'll set up custom modes, connect to your IBM i system, and execute your first queries using Bob's AI-powered interface, enabling Bob (AI agent) to interact with IBM i databases, execute SQL queries, and access system services through the Model Context Protocol (MCP).
 
 The *IBM Bob premium package for IBM i* available at GA will bring standard IBM i modes and tools that will differ from the ones used in this tutorial. 
 
-## What You'll Learn
+> **Note:** For a comprehensive guide covering both local and remote MCP server deployments, see [`lab4-ibmi-mcp-setup-guide.md`](lab4-ibmi-mcp-setup-guide.md). This lab focuses on the remote IBM i deployment scenario. 
 
-- How to configure Bob for IBM i development with MCP and modes
-- How to use IBM i-specific AI agent modes
-- How to query IBM i systems using natural language
-- How to leverage pre-built IBM i tools
+> **Note:** Please refer to the [MCP Server for IBM i repository](https://github.com/IBM/ibmi-mcp-server)for more information. 
+
+## What is MCP?
+
+The **Model Context Protocol (MCP)** is an open protocol that standardizes how AI applications interact with external data sources and tools. Think of it as a universal adapter that allows AI agents like Bob to:
+
+- **Access Data Sources** - Connect to databases, APIs, and file systems
+- **Execute Tools** - Run SQL queries, system commands, and custom operations
+- **Maintain Context** - Keep track of conversation state and data across interactions
+
+### Key MCP Concepts
+
+1. **MCP Server** - A service that exposes tools and resources to AI agents
+2. **Transport** - Communication method (HTTP for remote, Stdio for local)
+3. **Tools** - Executable operations (SQL queries, system commands)
+4. **Resources** - Data sources (databases, files, APIs)
+5. **Authentication** - Security layer (tokens, credentials)
+
 
 ## Prerequisites (15 minutes)
 
+Before starting, ensure you have:
+
+- ✅ Access to an IBM i system with SSH access
+- ✅ IBM i user profile with appropriate database authorities
+- ✅ VS Code with Bob extension installed
+- ✅ Basic understanding of IBM i and SQL
+
 An IBM i VM is necessary for this lab, with 8076 port open for Mapepire server (use tunneling if using Power Virtual Server/TechZone). You'll find hereunder a few options to get an IBM i virtual machine, and instructions to start the Mapepire server on IBM i that is requried for this lab.
+
+In this lab, we'll use the following setup:
+
+```
+┌─────────────────────────────┐
+│   Your Workstation          │
+│                             │
+│  ┌─────────────────────┐   │
+│  │   VS Code + Bob     │   │
+│  │   (AI Agent)        │   │
+│  └──────────┬──────────┘   │
+│             │               │
+│             │ HTTPS         │
+│             │ Bearer Token  │
+└─────────────┼───────────────┘
+              │
+              ▼
+┌─────────────────────────────┐
+│   IBM i System              │
+│                             │
+│  ┌─────────────────────┐   │
+│  │  MCP Server         │   │
+│  │  (Node.js/HTTP)     │   │
+│  │  Port 3010          │   │
+│  └──────────┬──────────┘   │
+│             │               │
+│             ▼               │
+│  ┌─────────────────────┐   │
+│  │  Mapepire           │   │
+│  │  (WebSocket)        │   │
+│  │  Port 8076          │   │
+│  └──────────┬──────────┘   │
+│             │               │
+│             ▼               │
+│  ┌─────────────────────┐   │
+│  │  Db2 for i          │   │
+│  │  (Database)         │   │
+│  └─────────────────────┘   │
+└─────────────────────────────┘
+```
+
+**Key Components:**
+- **Bob (VS Code)** - AI agent that sends requests to MCP server
+- **MCP Server** - Runs on IBM i, exposes SQL tools via HTTP
+- **Mapepire** - Database server that executes SQL queries
+- **Db2 for i** - IBM i database system
 
 ### How to get an IBM i virtul machine (aka LPAR)? 
 
@@ -35,7 +102,27 @@ An IBM i VM is necessary for this lab, with 8076 port open for Mapepire server (
     * TechZone: request a ["On-Premises IBM Power AIX, IBM i and Linux Base Images"](https://techzone.ibm.com/collection/6261d3584670d7001e3d483a) environment, for example IBM i 7.5 on Power10. IBMers must connect through the Internal intranet and Business partners must connect through a provided VPN.
     * TechZone: request a [IBM i on IBM Cloud Power Virtual Server](https://techzone.ibm.com/collection/628be988043b54001f89111f) as listed above.
 
-### How to start the mapepire service on IBM i used by MCP ? 
+
+## Part 1: MCP Server Quick Setup on IBM i 
+
+Skip this Part if your MCP server is already running.
+
+### Step 1: Install Prerequisites on IBM i
+```bash
+# If not installed, use yum to install Node.js 20+
+yum install nodejs22
+
+# Verify installation
+node --version  # Should show v20.x.x or higher
+
+# Check if git is installed
+git --version
+
+# If not installed
+yum install git
+```
+
+### Step 2: Install & Start mapepire service on IBM i (used by MCP server)
 
 Follow these [instructions](https://ibm-d95bab6e.mintlify.app/setup-mapepire#option-1-rpm-installation-recommended) and don't be scared.
 In a nutshell: 
@@ -44,46 +131,104 @@ In a nutshell:
 3. connect with ssh and you user profile, then execute the commands :
     - ``/QOpenSys/pkgs/bin/yum install mapepire-server``
     - ``/QOpenSys/pkgs/bin/yum install service-commander``
-    - ``sc start mapepire``
+    - ``/QOpenSys/pkgs/bin/sc start mapepire``
 
-4. If using a TechZone [IBM i on IBM Cloud Power Virtual Server](https://techzone.ibm.com/collection/628be988043b54001f89111f), create the ssh tunnel using the following command on your Linux/MacOS laptop (for Windows, please use the reference [here](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-connect-ibmi#ssh-tunneling)):
+### Step 3: Install MCP tools on IBM i
+
+You can create your own tools, use tools from the IBM i MCP repository, or use the IBM i MCP Server [built-in tools](https://ibm-d95bab6e.mintlify.app/sql-tools/built-in-tools). 
+In this lab, let's firt use the built-in tools and go directly to the next step. 
+
+> **Note:** For copying tools from the repository (`tools` directory): 
+```bash
+# From you HOME directory in PASE, Clone the IBM i MCP Server repository
+git clone https://github.com/IBM/ibmi-mcp-server.git 
+```
+
+### Step 4: Configure MCP Server
+
+In PASE, create a `.env` file with your configuration:
+
+```bash
+cat > .env << 'EOF'
+# IBM i Connection
+DB2i_HOST=localhost
+DB2i_PORT=8076
+DB2i_IGNORE_UNAUTHORIZED=true
+DB2i_USER=<YOUR-USER>
+DB2i_PASS=<YOUR-PASSWORD>
+
+# Server Configuration
+MCP_TRANSPORT_TYPE=http
+MCP_HTTP_PORT=3010
+MCP_LOG_LEVEL=info
+
+# For development/testing - allow HTTP
+# For production, set to false and use HTTPS
+IBMI_AUTH_ALLOW_HTTP=true
+
+# If using custom tools - not the case if using built-in
+# TOOLS_YAML_PATH=./tools
+
+EOF
+```
+**Important Notes:**
+- `DB2i_HOST=localhost` because Mapepire runs on the same IBM i system
+-  `DB2i_USER`and `DB2i_PASS` must be set (OS credentials used by the tools)
+- `DB2i_PORT=8076` is the default Mapepire port
+- `MCP_HTTP_PORT=3010` is the port where MCP server will listen
+- For production, set `IBMI_AUTH_ALLOW_HTTP=false` and configure HTTPS with authentication !! 
+
+### Step 5: Start the MCP Server
+
+The repository includes pre-built SQL tools in the `tools/` directory. Start the server to load all available tools:
+
+```bash
+# Set configuration file path
+export MCP_SERVER_CONFIG=.env && npx -y @ibm/ibmi-mcp-server@latest --transport http --builtin-tools
+```
+
+### Step X: Networking setup if your IBM i traffic is filtered
+
+For example, if using a TechZone [IBM i on IBM Cloud Power Virtual Server](https://techzone.ibm.com/collection/628be988043b54001f89111f), only HTTPS and SSH are exposed on specific ports and you must create the ssh tunnel between your workstation (mcp client) and the IBM i (mcp server).  
+
+Use the following command on your Linux/MacOS laptop (for Windows, please use the reference [here](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-connect-ibmi#ssh-tunneling)) where all the protocols you want to use are passed in the ssh tunnel : 
 
 ````bash 
-ssh -L 50000:localhost:23 -L 2001:localhost:2001  -L 449:localhost:449 -L 8470:localhost:8470 -L 8471:localhost:8471 -L 8472:localhost:8472 -L 2007:localhost:2007 -L 8473:localhost:8473 -L 8474:localhost:8474 -L 8475:localhost:8475 -L 8476:localhost:8476 -L 2003:localhost:2003 -L 2002:localhost:2002 -L 2006:localhost:2006 -L 2300:localhost:2300 -L 2323:localhost:2323 -L 3001:localhost:3001 -L 3002:localhost:3002 -L 2005:localhost:2005 -L 8076:localhost:8076 -o ExitOnForwardFailure=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=3 <myuser>@<myIPaddress>
+ssh -L 50000:localhost:23 -L 2001:localhost:2001  -L 449:localhost:449 -L 8470:localhost:8470 -L 8471:localhost:8471 -L 8472:localhost:8472 -L 2007:localhost:2007 -L 8473:localhost:8473 -L 8474:localhost:8474 -L 8475:localhost:8475 -L 8476:localhost:8476 -L 2003:localhost:2003 -L 2002:localhost:2002 -L 2006:localhost:2006 -L 2300:localhost:2300 -L 2323:localhost:2323 -L 3001:localhost:3001 -L 3002:localhost:3002 -L 2005:localhost:2005 -L 8076:localhost:8076 -L 3010:localhost:3010 -o ExitOnForwardFailure=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=3 <myuser>@<myIPaddress>
 ````
-Note that in the command above, port 8076 is the default **mapepire** port. If you have changed it, please update it accordingly. Replace `<myuser>` and `<myIPaddress>` with your IBM i user and IP address.
+> **Note:** In the command above, port 8076 is the default **mapepire** port. If you have changed it, please update it accordingly. This port is not used when running MCP on IBM i. 
+> **Note:** In the command above, port 3010 is the default **MPC server** port. If you have changed it, please update it accordingly.
+> **Note:** Replace `<myuser>` and `<myIPaddress>` with your IBM i user and IP address.
 
 
-## Lab Setup (5 minutes)
+## Part 2 : Lab Setup in Bob (5 minutes)
 
 ### Step 1: Open project
 
-Create a new directory on your laptop, Open up this new folder in a new Bob window, this is the participant working directory.
+If not already done, Open up your project new Bob window, this is the participant working directory.
 
-### Step 2: Configure IBM i Connection
-
-Create a `.env` file in your project root with your IBM i credentials:
-
-```bash
-# .env file
-DB2i_HOST=your-ibmi-hostname.com
-DB2i_USER=YOURUSER
-DB2i_PASS=yourpassword
-DB2i_PORT=8076
-```
-
-Replace `ìbmi-hostanme.com`, `YOURUSER`, `yourpassword` by the corresponding values.
-
-**Important**: Add `.env` to `.gitignore`:
-
-```bash
-echo ".env" >> .gitignore
-```
-
-### Step 3: Update MCP Configuration
+### Step 2: Update MCP Configuration
 
 Edit `.bob/mcp.json` to use the `.env` file (remove credential references in any):
+We use `IBMi_IP` is `localhost` as it we use the ssh tunnel and IBM on Power Virtual Server. Please replace the IP address with the correct value. 
 
+```json
+{
+    "mcpServers": {
+        "ibmi-mcp-server": {
+            "type": "streamable-http",
+            "url": "http://<IBMi_IP>:3010/mcp"
+        },
+        "ibmi-mcp-docs": {
+            "type": "streamable-http",
+            "url": "https://ibm-d95bab6e.mintlify.app/mcp",
+            "alwaysAllow": []
+        }
+    }
+}
+```
+
+#### MCP running on your workstation - example
 ```json
 {
     "mcpServers": {
@@ -115,26 +260,18 @@ Edit `.bob/mcp.json` to use the `.env` file (remove credential references in any
 
 1. Restart Bob (or reload the window using `Function` + `F1` keys then `Reload Window`  )
 2. Open up Bob settings
-2. Check that `IBM i Agent` and `IBM i MCP Tool Builder` appear in your modes list
 3. Check that `ibmi-mcp-server` and `ibmi-mcp-docs` appear connected in your MCP list
+4. Click on `ibmi-mcp-server`, check the list of tools exposed. 
 
-## Exercise 1: Switch to IBM i Agent Mode (2 minutes)
+## Exercise 1: Query System Status (3 minutes)
 
-**Objective**: Select the IBM i-specific AI agent.
+**Objective**: Select the IBM i-specific AI agent, Use Bob to check your IBM i system's performance.
 
-1. Switch to IBM i Agent mode
+1. Switch to a mode that can use MCP tools - Advanced or other: 
 ![](./pics/select-ibmi-agent.png)
 
-2. Ask Bob: `What can you help me with?`
-   - Bob should describe its IBM i capabilities
-   - You may need to reload the window to refresh the credentials for the MCP server: `CMD` `SHFT` `P`, search `Developer: Reload Window`
-
-## Exercise 2: Query System Status (3 minutes)
-
-**Objective**: Use Bob to check your IBM i system's performance.
-
-1. Ask Bob: `"Show me the current system status"`
-2. Bob should execute the `system_status` tool and display:
+2. Ask Bob: `"Show me the current system status"`
+3. Bob should execute the `system_status` tool and display:
    - CPU utilization
    - Memory usage
    - I/O statistics
@@ -147,7 +284,7 @@ Edit `.bob/mcp.json` to use the `.env` file (remove credential references in any
 
 **✅ Success Criteria**: Bob returns formatted system performance data from your IBM i system.
 
-## Exercise 3: Explore Database Objects (3 minutes)
+## Exercise 2: Explore Database Objects (3 minutes)
 
 **Objective**: Use Bob to explore your IBM i database.
 
@@ -163,7 +300,7 @@ Edit `.bob/mcp.json` to use the `.env` file (remove credential references in any
 
 **✅ Success Criteria**: Bob successfully queries and displays IBM i service information.
 
-## Exercise 4: Security Analysis (Optional - 2 minutes)
+## Exercise 3: Security Analysis (Optional - 2 minutes)
 
 **Objective**: Use Bob to perform a basic security check.
 
@@ -175,7 +312,54 @@ Edit `.bob/mcp.json` to use the `.env` file (remove credential references in any
 
 **✅ Success Criteria**: Bob executes security analysis tools and returns results (or explains permission requirements).
 
-## Exercise 5: (optional) Using Bob Shell CLI (3 minutes)
+## Exercise 4: Creating Custom Tools
+
+
+
+You can create your own SQL tools by adding YAML files to the `tools/` directory on IBM i. 
+
+**Example Custom Tool:**
+
+On IBM i , Create `tools/custom/my-tools.yaml`:
+
+```yaml
+sources:
+  ibmi-system:
+    host: ${DB2i_HOST}
+    user: ${DB2i_USER}
+    password: ${DB2i_PASS}
+    port: 8076
+    ignore-unauthorized: true
+
+tools:
+  get_customer_orders:
+    source: ibmi-system
+    description: "Get all orders for a specific customer"
+    parameters:
+      - name: customer_id
+        type: string
+        description: "Customer ID"
+        required: true
+    statement: |
+      SELECT o.ORDER_ID, o.ORDER_DATE, o.ORDER_AMOUNT, c.CUSTOMER_NAME
+      FROM ORDERS o
+      JOIN CUSTOMERS c ON o.CUSTOMER_ID = c.CUSTOMER_ID
+      WHERE c.CUSTOMER_ID = ?
+      ORDER BY o.ORDER_DATE DESC
+
+toolsets:
+  custom:
+    tools:
+      - get_customer_orders
+```
+
+Restart the MCP server to load the new tools:
+
+```bash
+export MCP_SERVER_CONFIG=.env && npx -y @ibm/ibmi-mcp-server@latest --transport http --tools ./tools
+```
+
+## Exercise 4: (optional) Using Bob Shell (3 minutes)
 
 **Objective**: Learn to use Bob from the command line for general IBM i assistance.
 
