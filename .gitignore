@@ -10,3 +10,11 @@ lab105-premium-database-engineer.md
 lab106-premium-test-rpgunit.md
 lab107-premium-knowledge-assistant.md
 .env copy
+ansible/ansible.cfg
+ansible/QUICKSTART.md
+ansible/README.md
+ansible/inventories/development/hosts.yml
+ansible/playbooks/check_ptf_currency_mcp.yml
+ansible/playbooks/check_ptf_currency.yml
+ansible/reports/.gitkeep
+ansible/templates/ptf_currency_report.html.j2

@@ -1,0 +1,41 @@
+# Ansible
+*.retry
+.ansible/
+ansible.log
+
+# Reports directory (generated files)
+reports/*.html
+
+# Vault password files
+.vault_pass
+vault_pass.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Made with Bob
