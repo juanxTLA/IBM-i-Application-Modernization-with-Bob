@@ -7,16 +7,16 @@ This lab demonstrates how to set up and use the IBM i MCP Server in two differen
 1. **Local MCP Server** - Running on your workstation (Windows/macOS/Linux)
 2. **Remote MCP Server** - Running on IBM i itself
 
-Both approaches enable AI agents (like Bob in VS Code) to interact with IBM i databases, execute SQL queries, and access system services through the Model Context Protocol (MCP).
+Both approaches enable AI agents (like Bob) to interact with IBM i databases, execute SQL queries, and access system services through the Model Context Protocol (MCP).
 
 ## Prerequisites
 
 Before starting, ensure you have:
 
-- ✅ Node.js 18 or higher installed on your development machine
+- ✅ Node.js 22 or higher installed on your development machine
 - ✅ Access to an IBM i system with appropriate credentials
 - ✅ Mapepire installed and running on IBM i (port 8076 by default)
-- ✅ VS Code with Bob extension installed
+- ✅ Bob installed
 - ✅ Basic understanding of IBM i and SQL
 
 ### Verify Mapepire Installation
@@ -204,8 +204,8 @@ Add the IBM i MCP server configuration:
 
 ### Step 5: Test Local MCP Server
 
-1. **Restart VS Code** to load the new MCP configuration
-2. **Open Bob** in VS Code
+1. **Restart Bob** to load the new MCP configuration
+2. **Open Bob** 
 3. **Check MCP Status** - Look for the MCP icon (plug symbol) in Bob
 4. **List Tools** - Ask Bob: "What tools do you have available?"
 5. **Test a Tool** - Ask Bob: "Show me the system status of my IBM i"
@@ -216,7 +216,7 @@ If configured correctly, Bob should list the IBM i MCP tools and execute them su
 
 ✅ **Simple Setup** - No server deployment needed  
 ✅ **No Network Latency** - Direct local process communication  
-✅ **Easy Debugging** - Logs visible in VS Code  
+✅ **Easy Debugging** - Logs visible in Bob  
 ✅ **Quick Iteration** - Immediate config changes  
 
 ### Local Setup Limitations
@@ -235,9 +235,9 @@ The remote MCP server runs on IBM i itself and provides HTTP/HTTPS endpoints for
 
 ```
 ┌─────────────────┐         HTTPS          ┌──────────────────┐
-│   Workstation   │ ◄──────────────────► │   IBM i System   │
+│   Workstation   │ ◄──────────────────►   │   IBM i System   │
 │                 │   Bearer Token Auth    │                  │
-│  Bob/VS Code    │                        │  MCP Server      │
+│  Bob            │                        │  MCP Server      │
 │  AI Agent       │                        │  (Node.js)       │
 └─────────────────┘                        │                  │
                                            │  Mapepire        │
@@ -462,7 +462,7 @@ Edit your Bob MCP configuration file and add the remote server:
 ### Step 10: Test Remote MCP Server
 
 1. **Set Token** - Run the export command from Step 8 in your terminal
-2. **Restart VS Code** to load the new configuration
+2. **Restart Bob IDE** to load the new configuration
 3. **Open Bob** and verify the remote server appears
 4. **Test Connection** - Ask Bob: "What tools are available on the remote server?"
 5. **Execute Query** - Ask Bob: "Show me system activity from IBM i"
@@ -537,7 +537,7 @@ This allows you to:
 - Verify JSON syntax in MCP settings file
 - Check that `npx -y @ibm/ibmi-mcp-server@latest` works from terminal
 - Ensure absolute paths are used for `--tools`
-- Restart VS Code completely
+- Restart Bob completely
 
 **Connection to IBM i Failed:**
 - Test IBM i connectivity: `ping your-ibmi-host`

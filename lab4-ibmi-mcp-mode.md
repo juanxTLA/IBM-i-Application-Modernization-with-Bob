@@ -16,7 +16,7 @@ The *IBM Bob premium package for IBM i* available at GA will bring standard IBM 
 
 > **Note:** For a comprehensive guide covering both local and remote MCP server deployments, see [`lab4-ibmi-mcp-setup-guide.md`](lab4-ibmi-mcp-setup-guide.md). This lab focuses on the remote IBM i deployment scenario. 
 
-> **Note:** Please refer to the [MCP Server for IBM i repository](https://github.com/IBM/ibmi-mcp-server)for more information. 
+> **Note:** Please refer to the [MCP Server for IBM i repository](https://github.com/IBM/ibmi-mcp-server) for more information. 
 
 ## What is MCP?
 
@@ -52,10 +52,10 @@ In this lab, we'll use the following setup:
 ┌─────────────────────────────┐
 │   Your Workstation          │
 │                             │
-│  ┌─────────────────────┐   │
-│  │   VS Code + Bob     │   │
-│  │   (AI Agent)        │   │
-│  └──────────┬──────────┘   │
+│  ┌─────────────────────┐    │
+│  │   Bob IDE / Shell   │    │
+│  │   (AI Agent)        │    │
+│  └──────────┬──────────┘    │
 │             │               │
 │             │ HTTPS         │
 │             │ Bearer Token  │
@@ -65,24 +65,24 @@ In this lab, we'll use the following setup:
 ┌─────────────────────────────┐
 │   IBM i System              │
 │                             │
-│  ┌─────────────────────┐   │
-│  │  MCP Server         │   │
-│  │  (Node.js/HTTP)     │   │
-│  │  Port 3010          │   │
-│  └──────────┬──────────┘   │
+│  ┌─────────────────────┐    │
+│  │  MCP Server         │    │
+│  │  (Node.js/HTTP)     │    │
+│  │  Port 3010          │    │
+│  └──────────┬──────────┘    │
 │             │               │
 │             ▼               │
-│  ┌─────────────────────┐   │
-│  │  Mapepire           │   │
-│  │  (WebSocket)        │   │
-│  │  Port 8076          │   │
-│  └──────────┬──────────┘   │
+│  ┌─────────────────────┐    │
+│  │  Mapepire           │    │
+│  │  (WebSocket)        │    │
+│  │  Port 8076          │    │
+│  └──────────┬──────────┘    │
 │             │               │
 │             ▼               │
-│  ┌─────────────────────┐   │
-│  │  Db2 for i          │   │
-│  │  (Database)         │   │
-│  └─────────────────────┘   │
+│  ┌─────────────────────┐    │
+│  │  Db2 for i          │    │
+│  │  (Database)         │    │
+│  └─────────────────────┘    │
 └─────────────────────────────┘
 ```
 
@@ -92,7 +92,7 @@ In this lab, we'll use the following setup:
 - **Mapepire** - Database server that executes SQL queries
 - **Db2 for i** - IBM i database system
 
-### How to get an IBM i virtul machine (aka LPAR)? 
+### How to get an IBM i virtual machine (aka LPAR)? 
 
 * For customer activities: 
     * use customer infrastructure (IBM on prem or in the Cloud)
