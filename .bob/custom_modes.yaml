@@ -1,5 +1,5 @@
 customModes:
-  - slug: ibm-i-modernization
+  - slug: ibm-i-appmod
     name: "💡 Custom - IBM i AppMod"
     description: Convert and refactor IBM i code
     roleDefinition: >-
@@ -89,7 +89,7 @@ customModes:
       - Use modern BIFs, consistent indentation, and comments for non-obvious logic.
       - Use proper error handling such as MONITOR/ON-ERROR and SQL status checks.
 
-  - slug: ibm-i-developer
+  - slug: ibm-i-dev
     name: "ℹ️ Custom - IBM i Dev"
     description: Explain generate compile or document
     roleDefinition: >-
