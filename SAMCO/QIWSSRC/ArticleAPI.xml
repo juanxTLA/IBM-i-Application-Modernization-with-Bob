@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================================
+  IBM i Integrated Web Services (IWS) Deployment Descriptor
+  Service:    ArticleAPI
+  Version:    2.0
+  Library:    SAMCO
+  SRVPGM:     FARTICLEAPI
+  Module:     ART400
+
+  Deployment instructions:
+  1. Copy this file to your IWS server instance conf directory:
+       /www/<YOUR_SERVER>/conf/services/ArticleAPI/
+  2. Restart the IWS server instance:
+       STRTCPSVR SERVER(*HTTP) HTTPSVR(<YOUR_SERVER>)
+  3. Or redeploy via IWS admin GUI at http://<ibmi>:2001/HTTPAdmin
+
+  Endpoints registered:
+    GET    http://<ibmi>:<port>/web/services/articles
+    GET    http://<ibmi>:<port>/web/services/articles/{id}
+    POST   http://<ibmi>:<port>/web/services/articles
+    PUT    http://<ibmi>:<port>/web/services/articles/{id}
+    DELETE http://<ibmi>:<port>/web/services/articles/{id}
+    GET    http://<ibmi>:<port>/web/services/articles/{id}/info
+  ============================================================================
+-->
+<webServiceDefinitions
+  xmlns="http://www.ibm.com/xmlns/prod/websphere/iws/2011/01"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.ibm.com/xmlns/prod/websphere/iws/2011/01
+                      iwsconfig.xsd">
+
+  <!-- ======================================================================
+       Service Definition: ArticleAPI
+       ILE Service Program SAMCO/FARTICLEAPI
+       ====================================================================== -->
+  <webServiceDefinition
+    name="ArticleAPI"
+    description="SAMCO Article Management REST API - Full CRUD"
+    serviceType="REST"
+    library="SAMCO"
+    object="FARTICLEAPI"
+    objectType="SRVPGM"
+    baseURI="/web/services/articles"
+    version="2.0"
+    authenticationRequired="false"
+    userProfile="*SERVER">
+
+    <!-- ====================================================================
+         Endpoint 1: GET /articles
+         Procedure:  LISTALLARTICLES
+         Returns all active (non-deleted) articles with family and VAT info
+         ==================================================================== -->
+    <restServiceEndpoint
+      name="ListAllArticles"
+      description="Retrieve all active articles"
+      procedure="LISTALLARTICLES"
+      httpMethod="GET"
+      uriTemplate="/"
+      requestFormat="NONE"
+      responseFormat="JSON"
+      responseContentType="application/json; charset=UTF-8">
+    </restServiceEndpoint>
+
+    <!-- ====================================================================
+         Endpoint 2: GET /articles/{id}
+         Procedure:  GETARTICLE
+         Returns a single article by ID
+         ==================================================================== -->
+    <restServiceEndpoint
+      name="GetArticle"
+      description="Retrieve a single article by ID"
+      procedure="GETARTICLE"
+      httpMethod="GET"
+      uriTemplate="/{id}"
+      requestFormat="NONE"
+      responseFormat="JSON"
+      responseContentType="application/json; charset=UTF-8">
+      <uriParameter name="id" parameterName="pId" type="CHAR" length="6"/>
+    </restServiceEndpoint>
+
+    <!-- ====================================================================
+         Endpoint 3: POST /articles
+         Procedure:  CREATEARTICLE
+         Creates a new article. Request body is JSON mapped to ArticleInput DS.
+         ==================================================================== -->
+    <restServiceEndpoint
+      name="CreateArticle"
+      description="Create a new article"
+      procedure="CREATEARTICLE"
+      httpMethod="POST"
+      uriTemplate="/"
+      requestFormat="JSON"
+      requestContentType="application/json"
+      responseFormat="JSON"
+      responseContentType="application/json; charset=UTF-8">
+      <bodyParameter parameterName="pArticle"/>
+    </restServiceEndpoint>
+
+    <!-- ====================================================================
+         Endpoint 4: PUT /articles/{id}
+         Procedure:  UPDATEARTICLE
+         Updates an existing article. ID from URL, body JSON → ArticleInput DS.
+         ==================================================================== -->
+    <restServiceEndpoint
+      name="UpdateArticle"
+      description="Update an existing article"
+      procedure="UPDATEARTICLE"
+      httpMethod="PUT"
+      uriTemplate="/{id}"
+      requestFormat="JSON"
+      requestContentType="application/json"
+      responseFormat="JSON"
+      responseContentType="application/json; charset=UTF-8">
+      <uriParameter name="id" parameterName="pId" type="CHAR" length="6"/>
+      <bodyParameter parameterName="pArticle"/>
+    </restServiceEndpoint>
+
+    <!-- ====================================================================
+         Endpoint 5: DELETE /articles/{id}
+         Procedure:  DELETEARTICLE
+         Soft-deletes an article (sets ARDEL='X'), mirrors ART200 Opt 4.
+         ==================================================================== -->
+    <restServiceEndpoint
+      name="DeleteArticle"
+      description="Soft-delete an article (sets ARDEL=X)"
+      procedure="DELETEARTICLE"
+      httpMethod="DELETE"
+      uriTemplate="/{id}"
+      requestFormat="NONE"
+      responseFormat="JSON"
+      responseContentType="application/json; charset=UTF-8">
+      <uriParameter name="id" parameterName="pId" type="CHAR" length="6"/>
+    </restServiceEndpoint>
+
+    <!-- ====================================================================
+         Endpoint 6: GET /articles/{id}/info
+         Procedure:  GETARTICLEINFO
+         Returns the long-form article information text (FMT03 equivalent).
+         ==================================================================== -->
+    <restServiceEndpoint
+      name="GetArticleInfo"
+      description="Retrieve article long-form information text"
+      procedure="GETARTICLEINFO"
+      httpMethod="GET"
+      uriTemplate="/{id}/info"
+      requestFormat="NONE"
+      responseFormat="JSON"
+      responseContentType="application/json; charset=UTF-8">
+      <uriParameter name="id" parameterName="pId" type="CHAR" length="6"/>
+    </restServiceEndpoint>
+
+  </webServiceDefinition>
+</webServiceDefinitions>

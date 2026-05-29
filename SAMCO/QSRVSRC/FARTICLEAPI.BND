@@ -1,4 +1,18 @@
-STRPGMEXP PGMLVL(*CURRENT) SIGNATURE('V1.0 REST API')
-  /* Article REST API Procedures */
+STRPGMEXP PGMLVL(*CURRENT) SIGNATURE('V2.0 REST API')
+  /* ============================================================ */
+  /* Article REST API - Full CRUD                                  */
+  /* IWS Endpoints:                                                */
+  /*   GET    /articles         → LISTALLARTICLES                  */
+  /*   GET    /articles/{id}    → GETARTICLE                       */
+  /*   POST   /articles         → CREATEARTICLE                    */
+  /*   PUT    /articles/{id}    → UPDATEARTICLE                    */
+  /*   DELETE /articles/{id}    → DELETEARTICLE                    */
+  /*   GET    /articles/{id}/info → GETARTICLEINFO                 */
+  /* ============================================================ */
   EXPORT SYMBOL('LISTALLARTICLES')
+  EXPORT SYMBOL('GETARTICLE')
+  EXPORT SYMBOL('CREATEARTICLE')
+  EXPORT SYMBOL('UPDATEARTICLE')
+  EXPORT SYMBOL('DELETEARTICLE')
+  EXPORT SYMBOL('GETARTICLEINFO')
 ENDPGMEXP

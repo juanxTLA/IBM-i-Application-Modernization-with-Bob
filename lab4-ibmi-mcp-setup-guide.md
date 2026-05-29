@@ -1,4 +1,4 @@
-# Lab 4: IBM i MCP Server - Local and Remote Deployment Guide
+# Lab 4: IBM i MCP Server - Local and Remote Deployment Guide (DRAFT, not fully tested)
 
 ## Overview
 

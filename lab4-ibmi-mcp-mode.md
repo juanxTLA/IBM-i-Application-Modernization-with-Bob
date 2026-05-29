@@ -186,6 +186,39 @@ The repository includes pre-built SQL tools in the `tools/` directory. Start the
 # Set configuration file path
 export MCP_SERVER_CONFIG=.env && npx -y @ibm/ibmi-mcp-server@latest --transport http --builtin-tools
 ```
+### Step 6: Start the MCP Server as a Service
+
+On IBM i, Service Commander can be used to start a process as a background service. 
+
+In PASE, create a `ibmi-mcp-server.yaml` file with your configuration in `~/.sc/services/`:
+
+```bash
+cat > ~/.sc/services/ibmi-mcp-server.yaml << 'EOF'
+name: IBM i MCP Server
+dir: /home/<USERNAME>/MCP/ibmi-mcp-server
+start_cmd: npx -y @ibm/ibmi-mcp-server@latest --transport http --tools ./tools
+
+check_alive: port
+check_alive_criteria: 3010
+
+batch_mode: yes
+sbmjob_jobname: MCPSERVER
+sbmjob_opts: JOBQ(QUSRNOMAX) CCSID(37)
+
+environment_vars:
+  - "PATH=/QOpenSys/pkgs/bin:/QOpenSys/usr/bin:/usr/bin"
+  - "HOME=/home/<USERNAME>"
+
+groups:
+  - "mcp"
+  - "default"
+EOF
+```
+**Important Notes:** Please adapt the content above with your settings: 
+- transport: http or https, port number
+- <USERNAME> : use profile used to run the server 
+- CCSID: character set used in the submit job command, etc.
+
 
 ### Step X: Networking setup if your IBM i traffic is filtered
 
