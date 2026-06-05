@@ -19,32 +19,30 @@ Use the **Fixed to Free Conversion Workflow** and the `convert_rpg_source` tool 
 - `SAMCOn` in your library list (`n` = your team number)
 - [Lab 101](lab101-premium-discover-samco.md) completed (business rules context)
 
----
+## Step 0: Open your project (3 minutes)
 
-## Step 1: Pre-Convert with CVTRPGSRC (3 minutes)
-
-**Prompt:**
-```
-Use convert_rpg_source to pre-convert the file SAMCO/QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE using the IBM i CVTRPGSRC command. Show me the converted output.
-```
-
-**What to observe:**
-- Bob calls `convert_rpg_source` which wraps `CVTRPGSRC` on the live IBM i
-- Returns the syntax-converted free-format source as a preview
+- Download or git clone the repository
+- Open the resulting folder with Bob IDE (File>Open Folder from File)
+- Select `IBM-i-Application-Modernization-with-Bob.code-workspace`
+- Reconnect to your IBM i
+- Ideally , initialize your local git repository from the left menu and perform an initial commit. 
 
 ---
 
-## Step 2: Launch the Fixed to Free Conversion Workflow (3 minutes)
+## Step 1: Launch the Fixed to Free Conversion Workflow (3 minutes)
 
 1. Open the **Bob Workflows** panel in Bob IDE
 2. Select **"Fixed to Free Conversion"** → **Start Workflow**
-3. In the scope form, enter:
-   - **File**: `SAMCO/QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE`
-   - **Target library**: `SAMCOn`
+3. Choose `Fixed to Free Format (SAMCO)`
+4. In the scope form, enter:
+   - **RPG Source File**: `SAMCO/QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE`
+   - **Output File Path**: Specify the output file path
+   - Skip the compilation step for now. 
+   - In the last plan, edit and remove the last compilation steps. We only want to convert here. You can stop the workflow when the file is written to your workspace. 
 
 **What to observe:**
 - The workflow reads the local file and identifies spec groups (H, F, D, C)
-- Auto-loads `rpg-fixed-to-free` and `rpg-free-format-fundamentals` skills
+- Auto-loads `rpg-fixed-to-free` , `rpg-primer-basics`, `rpg-free-format-fundamentals` skills
 - Shows a conversion plan table:
 
 | Specification | Converts to |
@@ -56,7 +54,7 @@ Use convert_rpg_source to pre-convert the file SAMCO/QRPGLESRC/ART200-Work_with_
 
 ---
 
-## Step 3: Review and Refine the Conversion (5 minutes)
+## Step 2: Review and Refine the Conversion (5 minutes)
 
 The workflow converts each group and shows progress. During the C-spec conversion, ask:
 
@@ -73,16 +71,15 @@ The workflow outputs a status table:
 
 | File | Format Before | Format After | Status |
 |------|--------------|--------------|--------|
-| ART200-Work_with_article.PGM.SQLRPGLE | Fixed | Free | ✅ Converted |
+| ART200-Free-XXX.RPGLE | Fixed | Free | ✅ Converted |
 
 ---
 
-## Step 4: Compile the Converted Program (5 minutes)
+## Step 3: Compile the Converted Program (5 minutes) (DRAFT)
 
-**Prompt:**
+**Prompt:** (please replace SAMCOn by your target library name)
 ```
-Get the compile actions for SAMCO/QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE and compile it to SAMCOn.
-```
+Get the compile actions for the newly converted ART200 program in the local workspace and compile it to SAMCOn```
 
 **What to observe:**
 - Bob uses `get_compile_actions` — recommends `CRTSQLRPGI` for embedded SQL
@@ -113,9 +110,7 @@ Common pitfalls Bob will catch:
 
 - `convert_rpg_source` wraps IBM i's native `CVTRPGSRC` — faster than manual conversion
 - The workflow converts spec groups in order with skill-enforced rules
-- `rpg-fixed-to-free` skill prevents common pitfalls (ext-described fields, `*INZSR`, indicators)
-- Always compile to `SAMCOn` — never to the shared `SAMCO` library
-- Source is always saved locally — never written back to QSYS members
+- `rpg-fixed-to-free` and other specialized skills prevent common pitfalls (ext-described fields, `*INZSR`, indicators)
 
 ---
 

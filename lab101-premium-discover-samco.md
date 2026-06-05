@@ -3,7 +3,7 @@
 ## Overview
 Use Bob's **Ask** mode to read live QSYS source members from `SAMSRC`, generate program-level documentation, produce a functional business document, and create an architecture document with an ERD — all saved as markdown in the `docs/` directory.
 
-**Duration**: 15 minutes  
+**Duration**: 30 minutes  
 **Difficulty**: Beginner  
 **Mode**: 💬 Ask  
 **Source**: `SAMSRC` library on IBM i (QSYS)  
@@ -92,8 +92,26 @@ Save as docs/SAMCO-ArticleManagement-functional.md in the local workspace.
 - API Cost : around 0.7 bob coins
 
 ---
+## Step 4: Generate Business Rules Extraction (5 minutes)
 
-## Step 4: Generate Architecture Document and ERD (5 minutes)
+**Mode**: 💬 Agent
+
+Generate a functional business document using the `Business Rules Extraction` workflow.
+- Click on the `Start Workflow` top right button
+- Select the workflow `Business Rules Extraction - Library List`
+- Choose `LIBRARY`: `SAMSRC`; `SOURCE FILE`: `QRPGLESRC`; `MEMBER`: `ART300` , then Continue.
+
+**What to observe:**
+- Bob uses a guided workflow to get the necessary data and generate a complete report describing a business function
+- Documentation is written in business-friendly language, not technical jargon
+-  Saved to `business-rules-ART300-xxxx.md` in the IFS
+- API Cost : around 0.5 bob coins
+
+
+---
+## Step 5: Generate Architecture Document and ERD (5 minutes)
+
+**Mode**: 💬 IBM i Developer
 
 **Prompt:**
 ```
@@ -108,7 +126,8 @@ Include:
 Save as docs/SAMCO-architecture.md in the local workspace.
 ```
 
-Then run the `/erd` command to add a live schema diagram:
+Then run the `/erd` command to add a live schema diagram (add the erd slash command at the end of the prompt above): 
+
 ```
 /erd SAMCOn
 ```
@@ -117,7 +136,7 @@ Then run the `/erd` command to add a live schema diagram:
 - Bob queries `QSYS2.SYSTABLES`, `SYSCOLUMNS`, `SYSCST` to build the ERD
 - A **Mermaid ERD** is generated showing tables, primary keys, and foreign key relationships
 - Both architecture text and ERD are saved to `docs/SAMCO-architecture.md`
-- API Cost : around 1.8 bob coins
+- API Cost : around 6.0 bob coins
 
 > **Tip**: Try asking inline: *"What is the panel-step pattern in RPG?"* — Bob uses `search_ibm_i_docs_with_rag` to answer without leaving the conversation.
 
@@ -137,6 +156,7 @@ Then run the `/erd` command to add a live schema diagram:
 
 - `read_member` + `search_qsys` read live QSYS source — no copy-paste needed
 - `/erd` generates instant schema diagrams from the QSYS2 catalog
+- `Business Rules Extraction` is a powerful, optimized workflow to generate documentation
 - Documentation saved to `docs/` feeds all subsequent labs
 
 ---
