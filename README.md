@@ -18,7 +18,7 @@ Foundational agentic solution for IBM i
 
 <td align="center" width="50%">
 <a href="./lab100-premium-package-introduction.md">
-<img src="pics/image-bobppi.png" width="178">
+<img src="pics/image-bobppi.png" width="176">
 <br>
 <strong>IBM Bob & Premium Package for i</strong>
 </a>
