@@ -20,7 +20,7 @@ Foundational solution for IBM i
 <a href="./lab100-premium-package-introduction.md">
 <img src="pics/image-bobppi.png" width="176">
 <br>
-<strong>IBM Bob & Premium Package for i</strong>
+<strong>IBM Bob Premium Package for i</strong>
 </a>
 <br>
 Native/Optimized experience for IBM i
