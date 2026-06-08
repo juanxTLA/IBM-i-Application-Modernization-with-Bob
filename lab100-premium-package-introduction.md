@@ -2,19 +2,18 @@
 
 ---
 
-## 🎯 Mission: Modernisation for SAMCO
+## 🎯 Mission: Modernisation
 
 ### Your Mission
 
-As a member of the **SAMCO development team**, your mission is to modernize your application and development practices — from green screen to a collaborative **Git / VS Code era with DevOps automation**. Relax, IBM Bob is here to help.
-
-You are part of a **team of developers**, all onboarded on IBM Bob, all working on the same SAMCO application.
+As a member of the **development team**, your mission is to modernize your application and development practices — from green screen to a collaborative **Git / VS Code era with DevOps automation**. You are part of a **team of developers**, all onboarded on IBM Bob, all working on the same SAMCO application.
+Relax, IBM Bob is here to help ! 
 
 ## 🧪 IBM Bob with Premium Package for i
 
 ### How the Environment Works
 
-With Premium Package for i, source, system or application artifacts can live on the system or in your local workspace/Git — your choice. 
+With Premium Package for i, source, system or application artifacts can live on the system or in your local workspace/Git — your choice. Take benefits of the **built-in IBM i modes, rules, skills, workflows, and optimize your productivity.**
 
 ![alt text](pics/image-1ppi2.png)
 
@@ -40,8 +39,8 @@ This collaborative setup means your changes stay isolated in your branch until y
 | Lab | Title | Mode | Main Topic | Duration |
 |-----|-------|------|------------|----------|
 | [Lab 101](lab101-premium-discover-samco.md) | Document SAMCO with Bob | 💬 Ask | `read_member`, `search_qsys`, `/erd`, docs in `docs/` | 20 min |
-| [Lab 102](lab102-premium-fixed-to-free.md) | Convert Fixed-Format RPG to Free | ℹ️ IBM i Developer | `convert_rpg_source`, Fixed to Free Workflow, RPG skills | 20 min |
-| [Lab 103](lab103-premium-dds-to-sql-workflow.md) | Convert DDS to SQL with the Workflow | ℹ️ IBM i Developer | DDS to SQL Workflow, `db2-dds-to-ddl`, `check_sql_syntax` | 20 min |
+| [Lab 102](lab102-premium-fixed-to-free.md) | Convert Fixed-Format RPG to Free | ℹ️ IBM i Developer | `convert_rpg_source`, **Fixed to Free Workflow**, RPG skills | 20 min |
+| [Lab 103](lab103-premium-dds-to-sql-workflow.md) | Convert DDS to SQL with the Workflow | ℹ️ IBM i Developer | **DDS to SQL Workflow**, `db2-dds-to-ddl`, `check_sql_syntax` | 20 min |
 | [Lab 104](lab104-premium-rla-to-sql.md) | Convert RLA to SQL and Optimize | 🛢️ IBM i Database | `/erd`, `db2-sql-primer`, `db2-index-strategy` | 20 min |
 | [Lab 105](lab105-premium-impact-analysis.md) | Analyze Impact and Extend a Field Across the Full Stack | ℹ️ IBM i Developer | `QSYS2.SYSDEP`, `ALTER TABLE`, `search_ifs`, `write_stream_file`, `dds-display-files`, `rpg-embedded-sql` | 35 min |
 | [Lab 106](lab106-premium-test-rpgunit.md) | Generate RPGUnit Tests for SAMCO | ℹ️ IBM i Developer | `generate_rpg_unit_test_stub`, `run_rpg_unit_test_suite` | 20 min |
