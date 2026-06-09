@@ -11,20 +11,21 @@
 -- ============================================================================
 
 -- Clear existing data (optional - comment out if you want to keep existing data)
--- DELETE FROM SAMCO.ARTIPROV;
--- DELETE FROM SAMCO.DETORD;
--- DELETE FROM SAMCO.ORDER;
--- DELETE FROM SAMCO.ARTICLE;
--- DELETE FROM SAMCO.CUSTOMER;
--- DELETE FROM SAMCO.PROVIDER;
--- DELETE FROM SAMCO.FAMILLY;
--- DELETE FROM SAMCO.COUNTRY;
--- DELETE FROM SAMCO.PARAMETER WHERE PACODE = 'VAT';
+-- DELETE FROM ARTIPROV;
+-- DELETE FROM DETORD;
+-- DELETE FROM ORDER;
+-- DELETE FROM ARTICLE;
+-- DELETE FROM CUSTOMER;
+-- DELETE FROM PROVIDER;
+-- DELETE FROM FAMILLY;
+-- DELETE FROM COUNTRY;
+-- DELETE FROM PARAMETER WHERE PACODE = 'VAT';
 
 -- ============================================================================
 -- 1. COUNTRY Table - Country codes and names
 -- ============================================================================
-INSERT INTO SAMCO.COUNTRY (COID, COUNTR, COISO, COISO5, COISO1) VALUES
+SET SCHEMA SAMCOn;
+INSERT INTO COUNTRY (COID, COUNTR, COISO, COISO5, COISO1) VALUES
 ('FR', 'France', 'FRA', '250', '33'),
 ('US', 'United States', 'USA', '840', '1'),
 ('GB', 'United Kingdom', 'GBR', '826', '44'),
@@ -39,7 +40,7 @@ INSERT INTO SAMCO.COUNTRY (COID, COUNTR, COISO, COISO5, COISO1) VALUES
 -- ============================================================================
 -- 2. FAMILLY Table - Product families/categories
 -- ============================================================================
-INSERT INTO SAMCO.FAMILLY (FAID, FADESC, FAVATCD, FACREA, FAMOD, FAMODID, FADEL) VALUES
+INSERT INTO FAMILLY (FAID, FADESC, FAVATCD, FACREA, FAMOD, FAMODID, FADEL) VALUES
 ('ELE', 'Electronics', '2', CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
 ('FUR', 'Furniture', '2', CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
 ('CLO', 'Clothing', '2', CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
@@ -54,7 +55,7 @@ INSERT INTO SAMCO.FAMILLY (FAID, FADESC, FAVATCD, FACREA, FAMOD, FAMODID, FADEL)
 -- ============================================================================
 -- 3. ARTICLE Table - Products/Articles
 -- ============================================================================
-INSERT INTO SAMCO.ARTICLE (ARID, ARDESC, ARSALEPR, ARWHSPR, ARTIFA, ARSTOCK, ARMINQTY, ARCUSQTY, ARPURQTY, ARVATCD, ARCREA, ARMOD, ARMODID, ARDEL) VALUES
+INSERT INTO ARTICLE (ARID, ARDESC, ARSALEPR, ARWHSPR, ARTIFA, ARSTOCK, ARMINQTY, ARCUSQTY, ARPURQTY, ARVATCD, ARCREA, ARMOD, ARMODID, ARDEL) VALUES
 -- Electronics
 ('000001', 'Laptop Computer 15 inch', 899.99, 650.00, 'ELE', 25, 5, 0, 0, '2', CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
 ('000002', 'Wireless Mouse', 29.99, 15.00, 'ELE', 150, 20, 0, 0, '2', CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
@@ -111,7 +112,7 @@ INSERT INTO SAMCO.ARTICLE (ARID, ARDESC, ARSALEPR, ARWHSPR, ARTIFA, ARSTOCK, ARM
 -- ============================================================================
 -- 4. PROVIDER Table - Suppliers
 -- ============================================================================
-INSERT INTO SAMCO.PROVIDER (PRID, PROVNM, PRCONT, PRPHONE, PRVAT, PRMAIL, PRLINE1, PRLINE2, PRLINE3, PRZIP, PRCITY, PRCOUN, PRCREA, PRMOD, PRMODID, PRDEL) VALUES
+INSERT INTO PROVIDER (PRID, PROVNM, PRCONT, PRPHONE, PRVAT, PRMAIL, PRLINE1, PRLINE2, PRLINE3, PRZIP, PRCITY, PRCOUN, PRCREA, PRMOD, PRMODID, PRDEL) VALUES
 (1, 'TechSupply International', 'John Smith', '+33123456789', 'FR1234567890', 'contact@techsupply.com', '123 Tech Avenue', 'Building A', '', '75001', 'Paris', 'FR', CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
 (2, 'Furniture World Ltd', 'Marie Dubois', '+33198765432', 'FR9876543210', 'sales@furnitureworld.com', '456 Design Street', '', '', '69001', 'Lyon', 'FR', CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
 (3, 'Fashion Imports SA', 'Pierre Martin', '+33145678901', 'FR4567890123', 'info@fashionimports.com', '789 Style Boulevard', 'Floor 3', '', '13001', 'Marseille', 'FR', CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
@@ -126,7 +127,7 @@ INSERT INTO SAMCO.PROVIDER (PRID, PROVNM, PRCONT, PRPHONE, PRVAT, PRMAIL, PRLINE
 -- ============================================================================
 -- 5. CUSTOMER Table - Customers
 -- ============================================================================
-INSERT INTO SAMCO.CUSTOMER (CUID, CUSTNM, CUPHONE, CUVAT, CUMAIL, CULINE1, CULINE2, CULINE3, CUZIP, CUCITY, CUCOUN, CULIMCRE, CUCREDIT, CULASTORD, CUCREA, CUMOD, CUMODID, CUDEL) VALUES
+INSERT INTO CUSTOMER (CUID, CUSTNM, CUPHONE, CUVAT, CUMAIL, CULINE1, CULINE2, CULINE3, CUZIP, CUCITY, CUCOUN, CULIMCRE, CUCREDIT, CULASTORD, CUCREA, CUMOD, CUMODID, CUDEL) VALUES
 (1, 'Acme Corporation', '+33140000001', 'FR1111111111', 'orders@acme.com', '100 Business Street', '', '', '75008', 'Paris', 'FR', 50000.00, 45000.00, 20260115, CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
 (2, 'Global Trading SA', '+33140000002', 'FR2222222222', 'contact@globaltrading.fr', '200 Commerce Avenue', '', '', '69002', 'Lyon', 'FR', 75000.00, 70000.00, 20260110, CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
 (3, 'Tech Solutions Ltd', '+33140000003', 'FR3333333333', 'info@techsolutions.com', '300 Innovation Road', '', '', '13002', 'Marseille', 'FR', 100000.00, 85000.00, 20260118, CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
@@ -141,7 +142,7 @@ INSERT INTO SAMCO.CUSTOMER (CUID, CUSTNM, CUPHONE, CUVAT, CUMAIL, CULINE1, CULIN
 -- ============================================================================
 -- 6. ORDER Table - Customer Orders
 -- ============================================================================
-INSERT INTO SAMCO.ORDER (ORID, ORYEAR, ORCUID, ORDATE, ORDATDEL, ORDATCLO) VALUES
+INSERT INTO ORDER (ORID, ORYEAR, ORCUID, ORDATE, ORDATDEL, ORDATCLO) VALUES
 (1, 2026, 1, 20260115, 20260122, 0),
 (2, 2026, 2, 20260110, 20260117, 20260117),
 (3, 2026, 3, 20260118, 20260125, 0),
@@ -156,7 +157,7 @@ INSERT INTO SAMCO.ORDER (ORID, ORYEAR, ORCUID, ORDATE, ORDATDEL, ORDATCLO) VALUE
 -- ============================================================================
 -- 7. DETORD Table - Order Details/Lines
 -- ============================================================================
-INSERT INTO SAMCO.DETORD (ODORID, ODYEAR, ODLINE, ODARID, ODQTY, ODQTYLIV, ODPRICE, ODTOT, ODTOTVAT) VALUES
+INSERT INTO DETORD (ODORID, ODYEAR, ODLINE, ODARID, ODQTY, ODQTYLIV, ODPRICE, ODTOT, ODTOTVAT) VALUES
 -- Order 1 (Customer 1)
 (1, 2026, 1, '000001', 2, 0, 899.99, 1799.98, 2159.98),
 (1, 2026, 2, '000002', 5, 0, 29.99, 149.95, 179.94),
@@ -202,7 +203,7 @@ INSERT INTO SAMCO.DETORD (ODORID, ODYEAR, ODLINE, ODARID, ODQTY, ODQTYLIV, ODPRI
 -- ============================================================================
 -- 8. ARTIPROV Table - Article-Provider relationships
 -- ============================================================================
-INSERT INTO SAMCO.ARTIPROV (APARID, APPRID, APPRICE, APREF, APCREA, APMOD, APMODID, APDEL) VALUES
+INSERT INTO ARTIPROV (APARID, APPRID, APPRICE, APREF, APCREA, APMOD, APMODID, APDEL) VALUES
 -- Electronics from TechSupply
 ('000001', 1, 650.00, 'TS-LAP-001', CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
 ('000002', 1, 15.00, 'TS-MOU-002', CURRENT DATE, CURRENT TIMESTAMP, 'ADMIN', ''),
@@ -259,7 +260,7 @@ INSERT INTO SAMCO.ARTIPROV (APARID, APPRID, APPRICE, APREF, APCREA, APMOD, APMOD
 -- ============================================================================
 -- 9. PARAMETER Table - Application parameters
 -- ============================================================================
-INSERT INTO SAMCO.PARAMETER (PACODE, PASUBCODE, PARM1, PARM2, PARM3, PARM4, PARM5) VALUES
+INSERT INTO PARAMETER (PACODE, PASUBCODE, PARM1, PARM2, PARM3, PARM4, PARM5) VALUES
 ('COMPANY', 'NAME', 'ARCAD', 'Arcad Software Sample Application', '', 0, 0),
 ('COMPANY', 'ADDRESS', '123 Main', 'Paris, France', 'FR', 0, 0),
 ('COMPANY', 'CONTACT', '+33123456', 'contact@arcad.com', '', 0, 0),
@@ -276,15 +277,15 @@ INSERT INTO SAMCO.PARAMETER (PACODE, PASUBCODE, PARM1, PARM2, PARM3, PARM4, PARM
 -- ============================================================================
 -- Run these to verify data was inserted correctly:
 
--- SELECT COUNT(*) AS COUNTRY_COUNT FROM SAMCO.COUNTRY;
--- SELECT COUNT(*) AS FAMILY_COUNT FROM SAMCO.FAMILLY;
--- SELECT COUNT(*) AS ARTICLE_COUNT FROM SAMCO.ARTICLE;
--- SELECT COUNT(*) AS PROVIDER_COUNT FROM SAMCO.PROVIDER;
--- SELECT COUNT(*) AS CUSTOMER_COUNT FROM SAMCO.CUSTOMER;
--- SELECT COUNT(*) AS ORDER_COUNT FROM SAMCO.ORDER;
--- SELECT COUNT(*) AS DETORD_COUNT FROM SAMCO.DETORD;
--- SELECT COUNT(*) AS ARTIPROV_COUNT FROM SAMCO.ARTIPROV;
--- SELECT COUNT(*) AS PARAMETER_COUNT FROM SAMCO.PARAMETER;
+-- SELECT COUNT(*) AS COUNTRY_COUNT FROM COUNTRY;
+-- SELECT COUNT(*) AS FAMILY_COUNT FROM FAMILLY;
+-- SELECT COUNT(*) AS ARTICLE_COUNT FROM ARTICLE;
+-- SELECT COUNT(*) AS PROVIDER_COUNT FROM PROVIDER;
+-- SELECT COUNT(*) AS CUSTOMER_COUNT FROM CUSTOMER;
+-- SELECT COUNT(*) AS ORDER_COUNT FROM ORDER;
+-- SELECT COUNT(*) AS DETORD_COUNT FROM DETORD;
+-- SELECT COUNT(*) AS ARTIPROV_COUNT FROM ARTIPROV;
+-- SELECT COUNT(*) AS PARAMETER_COUNT FROM PARAMETER;
 
 -- ============================================================================
 -- Sample Queries for Testing
@@ -294,23 +295,23 @@ INSERT INTO SAMCO.PARAMETER (PACODE, PASUBCODE, PARM1, PARM2, PARM3, PARM4, PARM
 -- SELECT 
 --     a.ARID, a.ARDESC, a.ARSALEPR, a.ARSTOCK,
 --     f.FADESC AS FAMILY, a.ARVATCD
--- FROM SAMCO.ARTICLE a
--- LEFT JOIN SAMCO.FAMILLY f ON a.ARTIFA = f.FAID
+-- FROM ARTICLE a
+-- LEFT JOIN FAMILLY f ON a.ARTIFA = f.FAID
 -- WHERE a.ARDEL = ''
 -- ORDER BY a.ARID;
 
 -- Get all orders with customer information
 -- SELECT 
 --     o.ORID, o.ORDATE, c.CUSTNM, c.CUCITY
--- FROM SAMCO.ORDER o
--- JOIN SAMCO.CUSTOMER c ON o.ORCUID = c.CUID
+-- FROM ORDER o
+-- JOIN CUSTOMER c ON o.ORCUID = c.CUID
 -- ORDER BY o.ORDATE DESC;
 
 -- Get order details with article information
 -- SELECT 
 --     d.ODORID, d.ODLINE, a.ARDESC, d.ODQTY, d.ODPRICE, d.ODTOT
--- FROM SAMCO.DETORD d
--- JOIN SAMCO.ARTICLE a ON d.ODARID = a.ARID
+-- FROM DETORD d
+-- JOIN ARTICLE a ON d.ODARID = a.ARID
 -- WHERE d.ODORID = 1
 -- ORDER BY d.ODLINE;
 
