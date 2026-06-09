@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "SAMCO"
+		}
+	],
+	"settings": {
+		"coboleditor.metadata_symbols": [],
+		"coboleditor.metadata_entrypoints": [],
+		"coboleditor.metadata_types": [],
+		"coboleditor.metadata_files": [
+			"1780666264000,SAMCO/QCBLSRC/PRO201.CBLLE"
+		],
+		"coboleditor.metadata_knowncopybooks": [
+			"DDS-CTL01-O,PRO201.CBLLE",
+			"DDS-CTL01-I,PRO201.CBLLE",
+			"DDS-SFL01-O,PRO201.CBLLE",
+			"DDS-SFL01-I,PRO201.CBLLE",
+			"DDS-FMT02-O,PRO201.CBLLE",
+			"DDS-FMT02-I,PRO201.CBLLE"
+		]
+	}
+	
+}
