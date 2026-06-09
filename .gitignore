@@ -16,6 +16,13 @@ SAMCO/qtestsrc/ART300-Function_Article.test.RPGLE
 .gitignore
 PPi_ARCHITECTURE.md
 PPi_USER_GUIDE.md
-.logs
-.evfevent
-.itest
+lab100-premium-package-introduction-V1.md
+lab101-premium-devops-buildsamco-V1.md
+lab102-premium-developer-compile-V1.md
+lab103-premium-modernization-dds-to-sql-V1.md
+lab104-premium-impact-analysis-V1.md
+lab105-premium-database-engineer-V1.md
+lab106-premium-test-rpgunit-V1.md
+lab107-premium-knowledge-assistant-V1.md
+SAMCO/.evfevent/*
+SAMCO/.logs/*
