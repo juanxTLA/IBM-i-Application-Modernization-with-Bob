@@ -6,23 +6,37 @@
 
 ### Your Mission
 
-As a member of the **development team**, your mission is to modernize your application and development practices — from green screen to a collaborative **Git / VS Code era with DevOps automation**. You are part of a **team of developers**, all onboarded on IBM Bob, all working on the same SAMCO application.
+As a member of the **development team**, your mission is to modernize your application and development practices — from green screen to a collaborative **Git / VS Code era with DevOps automation**. You are part of a **team of developers**, all onboarded on IBM Bob, all working on the same application.
 Relax, IBM Bob is here to help ! 
 
-## 🧪 IBM Bob with Premium Package for i
-
-### How the Environment Works
-
 With Premium Package for i, source, system or application artifacts can live on the system or in your local workspace/Git — your choice. Take benefits of the **built-in IBM i modes, rules, skills, workflows, and optimize your productivity.**
-
-![alt text](pics/image-1ppi2.png)
 
 **Key general principles with Premium Package for i (PPi)**: Source can live in the **local workspace** or in **source files in QSYS**. When using PPi, you can keep your files in QSYS if you want to, and use Bob/PPi as an assistant while your developers still use SEU/PDM. **Just because you can doesn't mean you should!**.
 We really encourage you to move your source files to the IFS and git, and use QSYS when it makes sense. 
 
+You'll find 2 assets below to test and demonstrate IBM Bob Premium Package for i (PPi): 
+1. **End to end Labs with SAMCO** 
+2. **Demonstration with Flight400 (Work in progress, IBM Internal)**
+
+## ✈️ IBM Bob with Premium Package for i : End to End Demo (Flight400)
+
+> ⚠️ **IBM Internal, Work in progress** : this end-to-end Flight400 demo is intended for IBMers building and delivering client demonstrations. **Dear customer, demand your demo now ヅ !!** 
+
+The **Flight400** demo showcases the full Premium Package for i experience on a simple but realistic IBM i application — from legacy green-screen RPG to a modern, AI-assisted development workflow. Use it as a live, story-driven reference to illustrate the value of Bob PPi. 
+
+🔗 IBM Internal repository: [flight400-demo](https://github.ibm.com/benoit-marolleau/flight400-demo/blob/main/README.md)
+
+---
+
+## 🧪 IBM Bob with Premium Package for i : End to End Labs (SAMCO)
+
+### SAMCO Environment
+
+![alt text](pics/image-1ppi2.png)
+
 **Key principle in these Labs**: Source lives in the **local workspace** only. `SAMCOn` (n = team number)contains compiled programs, service programs, and database objects — no source members. `SAMSRCn` contains source files of the SAMCO application. In the rest of the labs, compiled objects always target `SAMCOn`.
 
-**Important Note**: Throughout the lab, you can start a new Bob task specifying a scope (workspace) using the "+" button at the top of the 'IBM Bob' view: **local** workspace, **QSYS (Library list)**, or **IFS**. Most exercises can be run in either scope. The behavior of the tool will be slightly different: **experiment and choose!**
+**💡 Important Note**: Throughout the lab, you can start a new Bob task specifying a scope (workspace) using the **"+" button** at the top of the 'IBM Bob' Chat view: **1.local** workspace, **2.QSYS (Library list)**, or **3.IFS**. Most exercises can be run in either scope with the appropriate preparation. The behavior of the tool will be slightly different: **experiment and decide!**
 
 The SAMCO application and database have already been built in your `SAMCOn` library so initally you don't have to build it. During the lab, you may need to modify the source code, and if you wish, you can recompile it, here using the Tobi (makei) tool. Of course, in your day to day developer activity, other build tools or scripts could be used. 
 
@@ -31,9 +45,9 @@ The SAMCO application and database have already been built in your `SAMCOn` libr
 | **Source code** | Local workspace — your Git clone on your workstation (IFS-synchronized). **This is the only place source is edited.** |
 | **Your workspace** | Your own clone of the shared Git repository — Bob reads and writes local files directly |
 | **Compiled objects & database** | Built and stored in **`SAMCOn`** on IBM i — where `n` is your team number (e.g., `SAMCO1`, `SAMCO3`) |
-| **`SAMSRCn` library** | Library containing source members on IBM i — used **in Lab 101** for documentation; normally, never edited |
+| **Source Files** | **`SAMSRCn`** Libraries containing source members on IBM i — used **in Lab 101** for documentation generation and code understanding |
 
-This collaborative setup means your changes stay isolated in your branch until you are ready to merge, while the rest of your team works in parallel.
+This collaborative setup means your changes stay isolated in your branch (and libraries) until you are ready to merge, while the rest of your team works in parallel.
 
 ---
 ## 📋 Labs Summary
