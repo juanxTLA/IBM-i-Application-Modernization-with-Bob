@@ -37,6 +37,7 @@ Run the `/erd` command:
 - Auto-loads `db2-sql-primer`, `db2-sql-optimization`, `db2-index-strategy` skills
 - Here with existing SAMCO, there are no SQL constraints defined in the catalog — these are DDS-era physical files with no formal referential integrity. The `/erd` command will build the column data needed to build the ERD from structural analysis.
 
+![alt text](pics/erd-samco.png)
 ---
 
 ## Step 2: Convert CHAIN Operations to a Single SQL JOIN (4 minutes)
@@ -51,27 +52,31 @@ Read in SAMSRCn library the SQLRPGLE program in QRPGLESRC/ART200
 
 Find where it chains into ARTICLE then calls getArtFamDesc() to get the family description. Replace these two operations with a single SQL SELECT … LEFT JOIN. Show the new EXEC SQL block.
 ```
+![alt text](pics/RLA-sql.png)
 
 **What to observe:**
 - Bob reads directly in QSYS (or the local workspace file if you specify a local path OR the IFS if you specify an IFS path) and auto-loads the `rpg-embedded-sql` skill
 - Generates an `EXEC SQL` block:
 
 ```rpgle
-Exec SQL
-  SELECT ARDESC, f.FADESC
-  INTO :articleDesc, :familyDesc
-  FROM ARTICLE a
-  LEFT JOIN FAMILLY f ON a.ARFAMCOD = f.FAID
-  WHERE a.ARID = :arid;
-
-If SQLCODE = 0;
-  // Success
-ElseIf SQLCODE = 100;
-  // Not found
-Else;
-  // Error
-EndIf;
+exec sql
+  select a.arid, a.ardesc, a.arsalepr, a.arwhspr,
+         a.artifa, a.arstock, a.arminqty, a.arcusqty,
+         a.arpurqty, a.arvatcd, a.arcrea, a.armod,
+         a.armodid, a.ardel,
+         coalesce(f.fadesc, '') as famdesc
+    into :arid, :ardesc, :arsalepr, :arwhspr,
+         :artifa, :arstock, :arminqty, :arcusqty,
+         :arpurqty, :arvatcd, :arcrea, :armod,
+         :armodid, :ardel,
+         :famdesc
+    from article1 a
+    left join familly f on f.faid = a.artifa
+   where a.arid = :arid;
 ```
+
+**Optional/Bonus:**
+- Copy the query above and **ask Bob to review and optimize this query** with the `/review` slash command. You can Paste the SQL query after the slash command. Analyze the findings, but do not apply anything for now. 
 
 ---
 
@@ -79,12 +84,12 @@ EndIf;
 
 **Prompt:**
 ```
-For this LEFT JOIN query on ARTICLE and FAMILLY, evaluate the index strategy. Should I create a secondary index on ARTICLE(ARFAMCOD)? Use the db2-index-strategy skill.
+For this LEFT JOIN query on ARTICLE1 and FAMILLY, evaluate the index strategy.  Use the db2-index-strategy skill.
 ```
 
 **What to observe:**
-- Bob confirms ARID and FAID already exist as primary keys
-- Recommends a secondary index on `ARFAMCOD` for join performance
+- Bob uses DB2 skills and tools to query actual evidence — existing indexes, table statistics, MTIs, and Index Advisor data for these two tables
+- No additonal index here, but recommends a secondary index for join performance, to populate the article list. 
 - Used skill **db2-index-strategy**, skill **db2-performance-primer**
 
 **Prompt:**
@@ -93,12 +98,15 @@ Generate and validate the CREATE INDEX statement, then execute it in SAMCOn with
 ```
 
 **What to observe:**
-- The guardrail can block the execution — the DDL approval must be confirmed at the tool level.
+- The guardrail can block the execution — the DDL approval must be confirmed at the tool level.  Approve what's recommended.  
 
-Bob uses `check_sql_syntax` then `execute_sql_statement` after approval (index name can vary):
+Bob uses `check_sql_syntax` then `execute_sql_statement` after approval (index name , or statements can vary):
 ```sql
-CREATE INDEX SAMCOn.ARTICLE_ARTFAM_IDX ON ARTICLE(ARFAMCOD);
+CREATE INDEX SAMCO1.ARTICLE_ACTIVE_IDX
+    ON SAMCO1.ARTICLE (ARDESC ASC, ARID ASC)
+    WHERE ARDEL <> 'X'
 ```
+
 ---
 
 ## Step 4: Create a Summary View (3 minutes)
