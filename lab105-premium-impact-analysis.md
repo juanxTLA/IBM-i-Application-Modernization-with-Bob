@@ -50,13 +50,12 @@ Business requires 50. Before touching anything, perform a full impact analysis. 
 
 **Prompt:**
 ```
-Find all objects in SAMCOn that depend on the ARTICLE file using QSYS2.SYSTABLEDEP.
+Find all objects that depend on ARTICLE in @SAMCO1   on IBM i.
 Return object name, object type, and dependency type as a table.
 ```
 
 **What to observe:**
-- Bob uses `execute_sql_statement` against `QSYS2.SYSTABLEDEP`
-- The `db2-system-catalog` skill is auto-loaded
+- Bob uses `execute_sql_statement` against `QSYS2.SYSTABLEDEP` etc.
 - Returns dependent programs, service programs, logical files, and views
 
 ---
@@ -65,13 +64,15 @@ Return object name, object type, and dependency type as a table.
 
 **Prompt:**
 ```
-Map all foreign key relationships in SAMCOn using QSYS2.SYSCST and QSYS2.SYSREFCST.
-Show constraint name, child table, parent table, and FK column as a table.
+Map all relationships for the ARTICLE file in SAMCOn on IBM i.
+Show me every file or table that is linked to it — logical files built on top of it, any foreign keys, and any joins found in source code. For each relationship, tell me the dependent object name, what type it is, and how the relationship is defined (database rule vs. code only).
 ```
 
 **What to observe:**
-- Bob generates and runs the join query across `SYSCST`, `SYSREFCST`, `SYSKEYCST`
-- Returns constraints such as ARTICLE → FAMILLY, ARTICLE → VATDEF, ORDERLIN → ARTICLE
+- Are there zero foreign keys? → Integrity is enforced by code only — any direct table update bypasses all rules
+- Do logical files cover only some fields? → Field-level access control may be inconsistent
+- Are there multiple logicals over the same PF? → Each one is a potential breaking point when the PF structure changes
+- PF with no FK → candidate for CREATE TABLE with FOREIGN KEY constraints
 
 ---
 
@@ -79,46 +80,52 @@ Show constraint name, child table, parent table, and FK column as a table.
 
 **Prompt:**
 ```
-Search for all references to the field ARDESC.
-Also query QSYS2.SYSCOLUMNS WHERE COLUMN_NAME = 'ARDESC' AND TABLE_SCHEMA = 'SAMCO1'.
-Show file name, line number, and line content. Compile a full impact list.
+Find every place the field ARDESC is used in the SAMCOn library on IBM i.
+
+Look in all source files — RPG programs, display files, SQL scripts, and copybooks. For each hit, show the source member name, line number, and the line of code. Then show which database tables and views also contain this field. Finally, summarize what would break if this field was renamed or its length changed. What is the current field length and the impact if changing to 100.
+
 ```
 
-**What to observe:**
-- Bob queries `QSYS2.SYSCOLUMNS` via `execute_sql_statement` — confirms current `COLUMN_LENGTH`
-- Returns a combined impact list across database objects and source files
+**What to expect:**
+- Every source member that mentions the field by name — DDS definitions, RPG procedures, display file screen positions, and SQL view definitions
+- Every database object (table, logical file, view) that carries the field as a column, with its position and length
+- A plain-English summary of what stops working if the field is renamed or resized
 
+**What to observe:**
+- Is the field copied into a denormalized table? SAMREF holds its own ARDESC column with no database link to ARTICLE — a length change there is silent and manual
+- Is the field used as a key? ARTICLE2 is keyed by ARDESC — a rename or resize rebuilds the access path and breaks any program that opens that logical
+- Is the return type derived with like()? ART300 and its prototype use like(ardesc) — the size cascades automatically at compile time, but running objects stay stale until recompiled
+- How many screen positions reference it? Three in ART200D, including one input/output field — a length increase risks a UI layout overflow that only shows up at runtime
 ---
 
 ### Step 4: Simulate Recompile Impact (4 minutes)
 
 **Prompt:**
 ```
-Based on the ARTICLE dependents found in Step 1, which objects need to be recompiled
-after widening ARDESC from 30 to 50?
-
-Consider:
+Simulate Recompile Impact . Based on the ARTICLE dependents found in Step 1, which objects need to be recompiled after widening ARDESC from 30 to 50?
+Consider for example:
 1. Programs using ARTICLE with externally-described fields (F-spec)
 2. Programs using embedded SQL with SELECT *
 3. Logical files built over ARTICLE
-
-Use QSYS2.SYSTABLEDEP and search the local workspace for SELECT * patterns.
 ```
 
-**What to observe:**
-- Bob queries `QSYS2.SYSTABLEDEP` and searches local source for `SELECT *`
-- The `rpg-code-review` and `db2-system-catalog` skills are auto-loaded
-- Returns a recompile impact list with reasons for each object
+**What to expect:**
+- A categorized list of every object that must be recompiled, grouped by type — DDS files, SQL objects, RPG modules, and display files — with the reason each one is affected
+- An ordered recompile sequence showing which objects must be rebuilt before others, and which SQL DDL statements (ALTER TABLE, DROP/CREATE VIEW) replace a traditional recompile
 
+**What to observe:**
+- Returns a recompile impact list with reasons for each object
+- Is a display file field used as input? ART200D has ARDESC at column 29 as an input/output field — widening to 100 chars overflows a standard screen; the layout must be redesigned before recompile, not after
+- Which objects use like(fieldname) or REFFLD? These inherit the field size at compile time — Bob used QSYS2.SYSCOLUMNS2 to confirm the current length across all objects, and source searches (FARTICLE, /copy, REFFLD) to identify every compiled object whose buffer size is derived from ARDESC
+- Is there a safe recompile order? The physical file must go first — every logical file, view, RPG module, and display file that depends on it is blocked until ARTICLE.PF is rebuilt with the new length
 ---
 
 ### Step 5: Save the Impact Report (2 minutes)
 
 **Prompt:**
 ```
-Generate a markdown impact report for the ARDESC widening in SAMCOn.ARTICLE summarizing:
-dependent objects, foreign key relationships, ARDESC field usage across source files,
-and the recompile list. Save it as docs/ARTICLE-ARDESC-impact-report.md in the IFS.
+Generate a markdown impact report for the ARDESC widening in SAMCO1.ARTICLE summarizing:
+dependent objects, foreign key relationships, ARDESC field usage across source files, and the recompile list. Save it as docs/ARTICLE-ARDESC-impact-report.md in the IFS, in my home directory.
 ```
 
 **What to observe:**
@@ -133,20 +140,11 @@ and the recompile list. Save it as docs/ARTICLE-ARDESC-impact-report.md in the I
 
 **Prompt:**
 ```
-Generate an ALTER TABLE statement to extend ARDESC in SAMCOn.ARTICLE from CHAR(30) to CHAR(50).
-Validate with check_sql_syntax, then execute with guardrail approval.
+Extend ARDESC in SAMCO1.ARTICLE from CHAR(30) to CHAR(50).
+Execute with guardrail approval if possible (SQL). 
+Plan the differents tasks, and ask me before executing anything.
+Generate a markdown in the IFS in my home directory in the docs folder in not already generated ,  with this plan. 
 ```
-
-**What to observe:**
-- Bob uses `check_sql_syntax` — returns **Syntax OK**
-- Presents: *"This will modify column ARDESC in SAMCOn.ARTICLE. Approve?"*
-- Executes with `execute_sql_statement` after approval
-
-**Prompt:**
-```
-Verify by querying QSYS2.SYSCOLUMNS for ARDESC in SAMCOn.ARTICLE.
-```
-Expected: `COLUMN_LENGTH = 50`
 
 ---
 
@@ -157,17 +155,15 @@ Note that if you want to directly edit source files in QSYS (SAMSRCn library), p
 
 **Prompt:**
 ```
-Read SAMCO/QDDSSRC/ART200D-Work_with_Article.DSPF.
+Read @SAMCO/QDDSSRC/ART200D-Work_with_Article.DSPF.
 
-Find the ARDESC field. Widen it from 30 to 50 columns. The screen is 24 rows × 80 columns —
-ensure the field does not overflow column 80. Show the before/after DDS snippet,
-then save the updated file.
+Find the ARDESC field. Widen it from 30 to 50 columns. The screen is 24 rows × 80 columns —ensure the field does not overflow column 80. Show the before/after DDS snippet, then save the updated file to the source file in the local workspace (not in QSYS)
 ```
 
 **What to observe:**
 - Bob reads the local DSPF file
 - The `dds-display-files` skill enforces 24×80 screen boundary rules
-- Returns before/after comparison, adjusting label or position if needed
+- Returns before/after comparison (diff), adjusting label or position if needed
 - Writes the updated source back to [`SAMCO/QDDSSRC/ART200D-Work_with_Article.DSPF`](SAMCO/QDDSSRC/ART200D-Work_with_Article.DSPF)
 
 ---
@@ -176,20 +172,19 @@ then save the updated file.
 
 **Prompt:**
 ```
-Read SAMCO/QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE.
+Read @SAMCO/QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE.
 
 Find any hardcoded length-30 references to ARDESC:
 - Dcl-S or Dcl-Ds fields with explicit length 30
 - %Subst with hardcoded length 30
 - SQL host variables
 
-Update them to length 50. Show before/after, then save the updated file.
+Update them to length 50. Show before/after, then save the updated file in the local workspace (not in QSYS).
 ```
 
 **What to observe:**
 - Bob reads the local SQLRPGLE file
-- The `rpg-embedded-sql` skill is auto-loaded
-- Finds and replaces all explicit length-30 references
+- Finds and replaces all explicit length-30 references. Here there is none.
 - Writes the updated source back to [`SAMCO/QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE`](SAMCO/QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE)
 
 ---
@@ -199,47 +194,28 @@ Update them to length 50. Show before/after, then save the updated file.
 **Prompt:**
 ```
 Compile in this order (DSPF first, then program):
-1. SAMCO/QDDSSRC/ART200D-Work_with_Article.DSPF → SAMCOn
-2. SAMCO/QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE → SAMCOn
+1. @QDDSSRC/ART200D-Work_with_Article.DSPF   → SAMCOn
+2. @QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE → SAMCOn
 
 Get compile actions for each and execute. Report any errors or warnings.
 ```
+> Note: Replace SAMCOn with your SAMCO library name (n = team number) and reference your files with @ and the name of the file, so Bob can reference those files and trigger the compilation Action.
 
 **What to observe:**
 - Bob uses `get_compile_actions` then `execute_compile_action` for each
 - DSPF must compile first — the program depends on the display file format
-- Both should report: `No errors, no warnings`
-
-**If warnings appear:**
-```
-Explain this warning and whether it indicates a real truncation risk.
-```
-Bob uses `search_ibm_i_docs_with_rag` to look up the message and explain the impact.
-
----
+- Compilation errors (bad DDS column...) will be fixed by Bob , but feel free to interrupt if necessary. Bob will ask permission before executing any command or scripts to get information or edit a file.  
+- At the end , the compilation should be successful and Bob will list the issue encountered and how it fixed it. 
 
 ## ✅ Success Criteria
 
-- [ ] All ARTICLE dependents listed using `QSYS2.SYSTABLEDEP`
-- [ ] Foreign key map generated from `QSYS2.SYSCST` + `QSYS2.SYSREFCST`
-- [ ] `ARDESC` references found in `QSYS2.SYSCOLUMNS` and local workspace via `search_ifs`
+- [ ] All ARTICLE dependents listed 
+- [ ] Foreign key map generated 
+- [ ] `ARDESC` references found
 - [ ] Recompile impact list generated before any change was made
-- [ ] `docs/ARTICLE-ARDESC-impact-report.md` saved in the local workspace
-- [ ] `ALTER TABLE` extended `ARDESC` to 50 characters with `check_sql_syntax` validation and guardrail approval
 - [ ] DSPF updated in the local workspace — field widened to 50, no column boundary overflow
 - [ ] RPG program updated in the local workspace — hardcoded length-30 references removed
 - [ ] Both DSPF and program compiled without errors in `SAMCOn`
-
----
-
-## Key Takeaways
-
-- `QSYS2.SYSTABLEDEP`, `SYSCST`, and `SYSREFCST` reveal all dependencies from the live catalog — always run this before any structural change
-- `search_ifs` searches local workspace files for source references — no IBM i connection needed
-- **Impact-first**: save a report before touching anything — the report becomes your change ticket
-- `ALTER TABLE` requires guardrail approval — no silent data loss
-- The `dds-display-files` skill enforces the 24×80 screen constraint automatically
-- Always compile the display file **before** the program that references it
 
 ---
 
