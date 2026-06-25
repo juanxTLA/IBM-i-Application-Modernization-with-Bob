@@ -9,13 +9,8 @@ across all three layers: database, display file, and RPG program.
 **Duration**: 35 minutes  
 **Difficulty**: Intermediate  
 **Mode**: ℹ️ IBM i Developer  
-**Source**: Local workspace (`SAMCO/`) + live IBM i catalog  
+**Source**: QSYS (SAMSRCn / SAMCOn) + Local workspace (`SAMCO/`) 
 **Build target**: `SAMCOn`
-
-> **Local workspace**: Bob searches source in the **local Git clone** using `search_ifs`.
-> Live IBM i catalog queries run via `execute_sql_statement` against `SAMCOn` — which contains
-> compiled objects and the database, not source members. Bob edits local files with
-> `apply_diff` / `write_stream_file`. The database `ALTER TABLE` runs against `SAMCOn`.
 
 ---
 
@@ -23,7 +18,6 @@ across all three layers: database, display file, and RPG program.
 
 - Bob IDE with **IBM Bob Premium Package for i** installed
 - **Code for IBM i** extension connected to your IBM i system
-- **Db2 for i** extension installed
 - `SAMCOn` in your library list (`n` = your team number)
 - [Lab 103](lab103-premium-dds-to-sql-workflow.md) completed
 
