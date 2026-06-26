@@ -9,7 +9,7 @@ Hands-on labs to learn IBM i modernization using IBM Bob AI assistant. Each lab 
 
 <td align="center" width="50%">
 <a href="./lab100-premium-package-introduction.md">
-<img src="pics/image-bobppi.png" width="180">
+<img src="pics/image-bobppi.png" width="220">
 <br>
 <strong>IBM Bob Premium Package for i</strong>
 </a>
