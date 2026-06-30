@@ -56,7 +56,7 @@ This collaborative setup means your changes stay isolated in your branch (and li
 |-----|-------|------|------------|----------|
 | [Lab 101](lab101-premium-discover-samco.md) | Document SAMCO with Bob | 💬 Ask | `read_member`, `search_qsys`, `/erd`, docs in `docs/` | 20 min |
 | [Lab 102](lab102-premium-fixed-to-free.md) | Convert Fixed-Format RPG to Free | ℹ️ IBM i Developer | `convert_rpg_source`, **Fixed to Free Workflow**, RPG skills | 20 min |
-| [Lab 103](lab103-premium-dds-to-sql-workflow.md) | Convert DDS to SQL with the Workflow | ℹ️ IBM i Developer | **DDS to SQL Workflow**, `db2-dds-to-ddl`, `check_sql_syntax` | 20 min |
+| [Lab 103](lab103-premium-dds-to-sql-workflow.md) | Convert DDS to SQL | ℹ️ IBM i Developer | **DDS to SQL Skills**, `db2-dds-to-ddl`, `check_sql_syntax` | 20 min |
 | [Lab 104](lab104-premium-rla-to-sql.md) | Convert RLA to SQL and Optimize | 🛢️ IBM i Database | `/erd`, `db2-sql-primer`, `db2-index-strategy` | 20 min |
 | [Lab 105](lab105-premium-impact-analysis.md) | Analyze Impact and Extend a Field Across the Full Stack | ℹ️ IBM i Developer | `QSYS2.SYSDEP`, `ALTER TABLE`, `search_ifs`, `write_stream_file`, `dds-display-files`, `rpg-embedded-sql` , **Business Rules Extraction Workflow** | 35 min |
 | [Lab 106](lab106-premium-test-rpgunit.md) | Generate RPGUnit Tests for SAMCO | ℹ️ IBM i Developer | `generate_rpg_unit_test_stub`, `run_rpg_unit_test_suite` , **RPGUnit Test Plan Workflows** | 20 min |
@@ -138,10 +138,10 @@ The Premium Package adds the **`convert_rpg_source` tool** and the **Fixed to Fr
 
 ---
 
-### Lab 103 — Convert DDS to SQL with the Workflow
+### Lab 103 — Convert DDS to SQL 
 **Mode**: ℹ️ IBM i Developer | **File**: [lab103-premium-dds-to-sql-workflow.md](lab103-premium-dds-to-sql-workflow.md)
 
-The **DDS to SQL Conversion Impact Analysis Workflow** produces a full migration assessment for one DDS file before touching any code. It calls `QSYS2.GENERATE_SQL`, scans for static program references, and reports journaling, locks, and authority data as a structured impact report.
+The **DDS to SQL Conversion Impact Analysis** produces a full migration assessment for one DDS file before touching any code. It calls `QSYS2.GENERATE_SQL`, scans for static program references, and reports journaling, locks, and authority data as a structured impact report.
 
 ---
 
