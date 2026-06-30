@@ -71,21 +71,18 @@ This collaborative setup means your changes stay isolated in your branch (and li
 
 1. Download and install **Bob IDE** (VS Code-based).
 2. Launch Bob IDE and sign in with your **IBM ID** — if you don't have an account, inform your instructor before the lab.
-3. Install the **Bob Premium Package for i**  *(PPi `.vsix` provided)*  that includes IBM i Developer & Database modes, tools, workflows, skills 
+3. Install the **Bob Premium Package for i**  *(PPi `.vsix` in the marketplace)*  that includes IBM i Developer & Database modes, tools, workflows, skills 
 
 ### b. Install Code for IBM i Extension Pack
 
-Install the following extensions from the VS Code Marketplace (or via the `.vsix` files provided by your instructor):
+Install the following extensions from the VS Code Marketplace in not already installed: 
 
 | Extension |  Purpose |
 |-----------|----------|
 | **IBM i Development Pack**  | Includes a set of extensions for IBM i development |
-| **Code for IBM i**  | IBM i connection, member browser, compile actions (incl. in Dev Pack) |
-| **Db2 for i**  | SQL execution and result set viewer (included in Dev Pack)|
 
-
-> Refer to the [**Code for IBM i documentation**](https://codefori.github.io/docs/) if you have questions during installation.
-> If you installed PPi, verify the **Bob** chat panel opens and the **IBM i Developer** mode is available in the mode selector.
+> Refer to the [**Code for IBM i documentation**](https://codefori.github.io/docs/) if you have questions.
+> If you installed PPi, verify the **Bob** chat panel opens and the **IBM i Developer** and **IBM i Database** modes are available in the mode selector.
 
 ### c. Connection to IBM i
 
@@ -212,13 +209,8 @@ Queries the `QSYS2` catalog and generates a **Mermaid ERD** showing tables, colu
 
 ## Workflows (non exhaustive list)
 
-### Workflow 1 — DDS to SQL Conversion Impact Analysis
 
-Analyses a **single DDS PF or LF** and produces a full impact report before any migration. Steps: DDL generation (`QSYS2.GENERATE_SQL`), relationship scan (`SYSTOOLS.RELATED_OBJECTS`), static program reference scan (`DSPPGMREF`), object status + authority collection, rendered markdown report.
-
-**Used in**: [Lab 103](lab103-premium-dds-to-sql-workflow.md)
-
-### Workflow 2 — Fixed to Free Conversion
+### Workflow 1 — Fixed to Free Conversion
 
 Guided conversion of **fixed-format RPG to free-format RPG IV** — specification by specification (H→`Ctl-Opt`, F→`Dcl-F`, D→`Dcl-S`/`Dcl-Ds`, C→free-form), with a compile status table at the end.
 
