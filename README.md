@@ -8,7 +8,7 @@ Hands-on labs to learn IBM i modernization using IBM Bob AI assistant. Each lab 
 <tr>
 
 <td align="center" width="33%">
-<a href="https://github.com/bmarolleau/flight400-demo">
+<a href="https://github.com/bmarolleau/flight400-demo/blob/main/README.md">
 <img src="pics/image-bobppi.png" width="200">
 <br>
 <strong>✈️ Flight400 + Premium Package for i</strong>
