@@ -44,7 +44,7 @@ Business requires 50. Before touching anything, perform a full impact analysis. 
 
 **Prompt:**
 ```
-Find all objects that depend on ARTICLE in @SAMCO1   on IBM i.
+Find all objects that depend on ARTICLE in @SAMCOn   on IBM i.
 Return object name, object type, and dependency type as a table.
 ```
 
@@ -118,7 +118,7 @@ Consider for example:
 
 **Prompt:**
 ```
-Generate a markdown impact report for the ARDESC widening in SAMCO1.ARTICLE summarizing:
+Generate a markdown impact report for the ARDESC widening in SAMC0n.ARTICLE summarizing:
 dependent objects, foreign key relationships, ARDESC field usage across source files, and the recompile list. Save it as docs/ARTICLE-ARDESC-impact-report.md in the IFS, in my home directory.
 ```
 
@@ -134,7 +134,7 @@ dependent objects, foreign key relationships, ARDESC field usage across source f
 
 **Prompt:**
 ```
-Extend ARDESC in SAMCO1.ARTICLE from CHAR(30) to CHAR(50).
+Extend ARDESC in SAMCOn.ARTICLE from CHAR(30) to CHAR(50).
 Execute with guardrail approval if possible (SQL). 
 Plan the differents tasks, and ask me before executing anything.
 Generate a markdown in the IFS in my home directory in the docs folder in not already generated ,  with this plan. 
@@ -149,7 +149,7 @@ Note that if you want to directly edit source files in QSYS (SAMSRCn library), p
 
 **Prompt:**
 ```
-Read @SAMCO/QDDSSRC/ART200D-Work_with_Article.DSPF.
+Read @SAMCOn/QDDSSRC/ART200D-Work_with_Article.DSPF.
 
 Find the ARDESC field. Widen it from 30 to 50 columns. The screen is 24 rows × 80 columns —ensure the field does not overflow column 80. Show the before/after DDS snippet, then save the updated file to the source file in the local workspace (not in QSYS)
 ```
@@ -166,7 +166,7 @@ Find the ARDESC field. Widen it from 30 to 50 columns. The screen is 24 rows × 
 
 **Prompt:**
 ```
-Read @SAMCO/QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE.
+Read @SAMCOn/QRPGLESRC/ART200-Work_with_article.PGM.SQLRPGLE.
 
 Find any hardcoded length-30 references to ARDESC:
 - Dcl-S or Dcl-Ds fields with explicit length 30

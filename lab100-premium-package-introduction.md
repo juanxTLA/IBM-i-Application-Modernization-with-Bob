@@ -16,15 +16,15 @@ We really encourage you to move your source files to the IFS and git, and use QS
 
 You'll find 2 assets below to test and demonstrate IBM Bob Premium Package for i (PPi): 
 1. **End to end Labs with SAMCO** 
-2. **Demonstration with Flight400 (Work in progress, IBM Internal)**
+2. **Demonstration/Labs with Flight400**
 
 ## ✈️ IBM Bob with Premium Package for i : End to End Demo (Flight400)
 
-> ⚠️ **IBM Internal, Work in progress** : this end-to-end Flight400 demo is intended for IBMers building and delivering client demonstrations. **Dear customer, demand your demo now ヅ !!** 
+> This end-to-end Flight400 demo is intended for building and delivering client demonstrations. **Dear customer, demand your demo now ヅ !!** 
 
 The **Flight400** demo showcases the full Premium Package for i experience on a simple but realistic IBM i application — from legacy green-screen RPG to a modern, AI-assisted development workflow. Use it as a live, story-driven reference to illustrate the value of Bob PPi. 
 
-🔗 IBM Internal repository: [flight400-demo](https://github.ibm.com/benoit-marolleau/flight400-demo/blob/main/README.md)
+🔗 Repository: [flight400-demo](https://github.com/bmarolleau/flight400-demo/blob/main/README.md)
 
 ---
 
