@@ -15,7 +15,7 @@ Hands-on labs to learn IBM i modernization using IBM Bob AI assistant with the *
 </a>
 <br>
 ⭐ <em>Recommended!</em>⭐<br>
-Simple RPG/DDS app, source in QSYS — ideal for demos and half-day workshops. <b>Easy setup</b>
+Simple RPG/DDS app, source in QSYS — simple setup, ideal for demos and half-day workshops.
 </td>
 
 <td align="center" width="25%">
@@ -25,7 +25,7 @@ Simple RPG/DDS app, source in QSYS — ideal for demos and half-day workshops. <
 <strong>SAMCO + PPi</strong>
 </a>
 <br>
-Multi-language app (RPG, COBOL, CL, C, C++, DDS, SQL) — best for 3h+ workshops and customers with mixed-language codebases.
+Multi-language app (RPG, COBOL, CL, C++, DDS, SQL) — best for 3h+ workshops with mixed-language codebases.
 </td>
 
 <td align="center" width="25%">
