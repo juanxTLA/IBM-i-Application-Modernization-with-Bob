@@ -14,7 +14,7 @@ Hands-on labs to learn IBM i modernization using IBM Bob AI assistant. Each lab 
 <strong>✈️ Flight400 + Premium Package for i</strong>
 </a>
 <br>
-⭐⭐ <em>Recommended!</em>⭐⭐<br>
+⭐ <em>Recommended!</em>⭐<br>
 Simple RPG/DDS app, source in QSYS — ideal for quick demos and half-day workshops. Easiest setup.
 </td>
 
