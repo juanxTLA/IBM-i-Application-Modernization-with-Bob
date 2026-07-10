@@ -2,7 +2,7 @@
 
 ## Overview
 
-Hands-on labs to learn IBM i modernization using IBM Bob AI assistant. Each lab focuses on one practical use case you can complete quickly.
+Hands-on labs to learn IBM i modernization using IBM Bob AI assistant with the **Premium Package for i (PPi)**. Each lab focuses on one practical use case you can complete quickly.
 
 <table>
 <tr>
@@ -11,7 +11,7 @@ Hands-on labs to learn IBM i modernization using IBM Bob AI assistant. Each lab 
 <a href="https://github.com/bmarolleau/flight400-demo/blob/main/README.md">
 <img src="pics/image-bobppi.png" width="200">
 <br>
-<strong>✈️ Flight400 + Premium Package for i</strong>
+<strong>✈️ Flight400 + PPi</strong>
 </a>
 <br>
 ⭐ <em>Recommended!</em>⭐<br>
@@ -22,7 +22,7 @@ Simple RPG/DDS app, source in QSYS — ideal for quick demos and half-day worksh
 <a href="./lab100-premium-package-introduction.md">
 <img src="pics/image-bobppi.png" width="200">
 <br>
-<strong>SAMCO + Premium Package for i</strong>
+<strong>SAMCO + PPi</strong>
 </a>
 <br>
 Multi-language app (RPG, COBOL, CL, C, C++, DDS, SQL) — best for 3h+ workshops and customers with mixed-language codebases.
