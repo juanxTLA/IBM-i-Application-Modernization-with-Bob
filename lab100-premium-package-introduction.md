@@ -14,18 +14,6 @@ With Premium Package for i, source, system or application artifacts can live on 
 **Key general principles with Premium Package for i (PPi)**: Source can live in the **local workspace** or in **source files in QSYS**. When using PPi, you can keep your files in QSYS if you want to, and use Bob/PPi as an assistant while your developers still use SEU/PDM. **Just because you can doesn't mean you should!**.
 We really encourage you to move your source files to the IFS and git, and use QSYS when it makes sense. 
 
-You'll find 2 assets below to test and demonstrate IBM Bob Premium Package for i (PPi): 
-1. **End to end Labs with SAMCO** 
-2. **Demonstration/Labs with Flight400**
-
-## ✈️ IBM Bob with Premium Package for i : End to End Demo (Flight400)
-
-> This end-to-end Flight400 demo is intended for building and delivering client demonstrations. **Dear customer, demand your demo now ヅ !!** 
-
-The **Flight400** demo showcases the full Premium Package for i experience on a simple but realistic IBM i application — from legacy green-screen RPG to a modern, AI-assisted development workflow. Use it as a live, story-driven reference to illustrate the value of Bob PPi. 
-
-🔗 Repository: [flight400-demo](https://github.com/bmarolleau/flight400-demo/blob/main/README.md)
-
 ---
 
 ## 🧪 IBM Bob with Premium Package for i : End to End Labs (SAMCO)

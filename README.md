@@ -7,18 +7,18 @@ Hands-on labs to learn IBM i modernization using IBM Bob AI assistant. Each lab 
 <table>
 <tr>
 
-<td align="center" width="33%">
+<td align="center" width="25%">
 <a href="https://github.com/bmarolleau/flight400-demo/blob/main/README.md">
 <img src="pics/image-bobppi.png" width="200">
 <br>
 <strong>✈️ Flight400 + Premium Package for i</strong>
 </a>
 <br>
-⭐ <em>Recommended starting point</em><br>
+⭐⭐ <em>Recommended!</em>⭐⭐<br>
 Simple RPG/DDS app, source in QSYS — ideal for quick demos and half-day workshops. Easiest setup.
 </td>
 
-<td align="center" width="33%">
+<td align="center" width="25%">
 <a href="./lab100-premium-package-introduction.md">
 <img src="pics/image-bobppi.png" width="200">
 <br>
@@ -28,7 +28,7 @@ Simple RPG/DDS app, source in QSYS — ideal for quick demos and half-day worksh
 Multi-language app (RPG, COBOL, CL, C, C++, DDS, SQL) — best for 3h+ workshops and customers with mixed-language codebases.
 </td>
 
-<td align="center" width="33%">
+<td align="center" width="25%">
 <a href="./lab00_ibm-bob-ibmi-labs.md">
 <img src="pics/image-bob.png" width="200">
 <br>
@@ -38,10 +38,28 @@ Multi-language app (RPG, COBOL, CL, C, C++, DDS, SQL) — best for 3h+ workshops
 Bonus exercises with minimal or no IBM i connection: Ansible/DevOps automation, Green Screen to React, IBM i MCP Server, and custom Bob extensions.
 </td>
 
+<td align="center" width="25%">
+<a href="./lab200-premium-package-ops-sysadmin.md">
+<img src="pics/bob-for-i-ops.jpg" width="200">
+<br>
+<strong>PPi for IBM i Ops / Sysadmins</strong>
+</a>
+<br>
+Bob for Ops — Beyond the SDLC, Bob for IBM i troubleshooting and Power Systems operations
+</td>
+
 </tr>
 </table>
 
 ---
+
+## ✈️ IBM Bob with Premium Package for i : End to End Demo (Flight400)
+
+> This end-to-end Flight400 demo is intended for building and delivering client demonstrations. **Dear customer, demand your demo now ヅ !!** 
+
+The **Flight400** demo showcases the full Premium Package for i experience on a simple but realistic IBM i application — from legacy green-screen RPG to a modern, AI-assisted development workflow. Use it as a live, story-driven reference to illustrate the value of Bob PPi. 
+
+🔗 Repository: [flight400-demo](https://github.com/bmarolleau/flight400-demo/blob/main/README.md)
 
 ### Which application should I use?
 
