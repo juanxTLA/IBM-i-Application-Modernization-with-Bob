@@ -14,18 +14,6 @@ With Premium Package for i, source, system or application artifacts can live on 
 **Key general principles with Premium Package for i (PPi)**: Source can live in the **local workspace** or in **source files in QSYS**. When using PPi, you can keep your files in QSYS if you want to, and use Bob/PPi as an assistant while your developers still use SEU/PDM. **Just because you can doesn't mean you should!**.
 We really encourage you to move your source files to the IFS and git, and use QSYS when it makes sense. 
 
-You'll find 2 assets below to test and demonstrate IBM Bob Premium Package for i (PPi): 
-1. **End to end Labs with SAMCO** 
-2. **Demonstration/Labs with Flight400**
-
-## ✈️ IBM Bob with Premium Package for i : End to End Demo (Flight400)
-
-> This end-to-end Flight400 demo is intended for building and delivering client demonstrations. **Dear customer, demand your demo now ヅ !!** 
-
-The **Flight400** demo showcases the full Premium Package for i experience on a simple but realistic IBM i application — from legacy green-screen RPG to a modern, AI-assisted development workflow. Use it as a live, story-driven reference to illustrate the value of Bob PPi. 
-
-🔗 Repository: [flight400-demo](https://github.com/bmarolleau/flight400-demo/blob/main/README.md)
-
 ---
 
 ## 🧪 IBM Bob with Premium Package for i : End to End Labs (SAMCO)
@@ -67,15 +55,23 @@ This collaborative setup means your changes stay isolated in your branch (and li
 
 ## 🛠️ Lab Environment Setup
 
-### a. Install & Start IBM Bob IDE
+### a. (Optional) Get an IBM i Virtual Machine
+
+> Skip this if your instructor has already provided an IBM i system.
+
+If you need your own IBM i LPAR, the recommended option is **IBM i on IBM Cloud Power Virtual Server (PowerVS)** via TechZone:
+- [Request IBM i on PowerVS](https://techzone.ibm.com/collection/628be988043b54001f89111f) — available for customers, IBMers, and Business Partners.
+- If the system has a public IP, set up an SSH tunnel to reach it (see [instructions](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-connect-ibmi#ssh-tunneling)); your instructor will share the exact command.
+
+### b. Install & Start IBM Bob IDE
 
 1. Download and install **Bob IDE** (VS Code-based).
 2. Launch Bob IDE and sign in with your **IBM ID** — if you don't have an account, inform your instructor before the lab.
-3. Install the **Bob Premium Package for i**  *(PPi `.vsix` in the marketplace)*  that includes IBM i Developer & Database modes, tools, workflows, skills 
+3. Install the **Bob Premium Package for i**  *(PPi `.vsix` in the marketplace)*  that includes IBM i Developer & Database modes, tools, workflows, skills
 
-### b. Install Code for IBM i Extension Pack
+### c. Install Code for IBM i Extension Pack
 
-Install the following extensions from the VS Code Marketplace in not already installed: 
+Install the following extensions from the VS Code Marketplace in not already installed:
 
 | Extension |  Purpose |
 |-----------|----------|
@@ -84,16 +80,16 @@ Install the following extensions from the VS Code Marketplace in not already ins
 > Refer to the [**Code for IBM i documentation**](https://codefori.github.io/docs/) if you have questions.
 > If you installed PPi, verify the **Bob** chat panel opens and the **IBM i Developer** and **IBM i Database** modes are available in the mode selector.
 
-### c. Connection to IBM i
+### d. Connection to IBM i
 
 1. In Bob IDE, open the **IBM i** panel (left sidebar).
 2. Click **New Connection** and enter the **host IP, user profile, and password** provided by your instructor.
 
-- **Establish the connection to your IBM i** this is a standard connection to your IBM i. 
+- **Establish the connection to your IBM i** this is a standard connection to your IBM i.
 
 ![alt text](pics/image-2ppi.png)  ![alt text](pics/image-4ppi.png)  ![alt text](pics/image-5ppi.png)
  
- Refer to the `Code for i` [QuickStart]((https://codefori.github.io/docs/quickstart/) for more details. 
+ Refer to the `Code for i` [QuickStart](https://codefori.github.io/docs/quickstart/) for more details.
 
 
 - **(Optional) Establish an SSH tunnel when using IBM i on PVS** if you want to use a 5250 terminal session from your workstation. Only required if using IBM i on PowerVS (IBM Cloud) with a public IP. Please ask your instructor. (see instructions [here](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-connect-ibmi#ssh-tunneling , the instructor will share the command to run on your workstation).
@@ -104,7 +100,7 @@ Install the following extensions from the VS Code Marketplace in not already ins
 ### Library List
 
 
-**Important Note**: Your job's library list must include `SAMCOx` so that compiled programs can find their files and service programs at runtime. **Ideally, in your Bob IDE, please make sure your Library List includes: `SAMCOn` , `SAMSRCn`** 
+**Important Note**: Your job's library list must include `SAMCOx` so that compiled programs can find their files and service programs at runtime. **Ideally, in your Bob IDE, please make sure your Library List includes: `SAMCOn` , `SAMSRCn`**
 
 
 ```cl
@@ -114,53 +110,61 @@ ADDLIBLE LIB(SAMCOx)    /* compiled objects — replace x with your team number 
 Set the library list in the **Code for IBM i** connection settings under *User Library List* . If needed please refer to the [documentation](https://codefori.github.io/docs/browsers/).
 
 ![alt text](pics/image-3ppi.png)
+
+### e. Deploy and Build SAMCO on IBM i (Instructor / Self-hosted)
+
+> **Audience**: Lab instructors or participants running their own IBM i. If `SAMCOn` and `SAMSRCn` libraries were already pre-provisioned by your instructor, you can skip this section.
+
+The [`setup/`](setup/) directory contains three scripts that deploy, build, and replicate the SAMCO environment for every team member. Run them **once from IBM i PASE**, in order, or use `BUILD_ALL.sh` to run everything in a single shot.
+
+| Script | Purpose |
+|--------|---------|
+| [`1_deploy_samco_src_to_qsys.sh`](setup/1_deploy_samco_src_to_qsys.sh) | Creates the `SAMSRCn` library, creates all source physical files, then copies every IFS source member into the matching QSYS source member |
+| [`2_buildSAMCO.sh`](setup/2_buildSAMCO.sh) | Installs Tobi (`makei`) and Python 3.9, creates the `SAMCO` object library, runs `makei build`, and populates Db2 tables with sample data |
+| [`3_copy_lib_n_times.sh`](setup/3_copy_lib_n_times.sh) | Clones `SAMCO` (and `SAMSRC`) into `SAMCO1`…`SAMCOn` (and `SAMSRC1`…`SAMSRCn`) using `CPYLIB` — one copy per team |
+| [`BUILD_ALL.sh`](setup/BUILD_ALL.sh) | Orchestrates all three steps above in sequence |
+
+**Step-by-step (manual)**:
+
+**1. SSH to your IBM i and navigate to the setup directory:**
+```bash
+cd /home/YOURUSER/IBM-i-Application-Modernization-with-Bob/setup
+```
+
+**2. Deploy source to QSYS (creates `SAMSRC` library with all source members):**
+```bash
+bash 1_deploy_samco_src_to_qsys.sh --library SAMSRC
+```
+> Use `--dry-run` to preview without making changes.
+
+**3. Build the SAMCO application (creates `SAMCO` object library):**
+```bash
+bash 2_buildSAMCO.sh
+```
+This installs Tobi, compiles all RPG/CL/DDS/SQL objects, and populates the database tables.
+
+**4. Clone libraries for each team (e.g., for 25 participants):**
+```bash
+bash 3_copy_lib_n_times.sh --from SAMCO --range 1 25
+bash 3_copy_lib_n_times.sh --from SAMSRC --range 1 25
+```
+This creates `SAMCO1`…`SAMCO25` and `SAMSRC1`…`SAMSRC25`, one isolated pair per team.
+
+**Or run everything at once:**
+```bash
+bash BUILD_ALL.sh
+```
+
+**Quick reference — `3_copy_lib_n_times.sh` options:**
+
+| Option | Description |
+|--------|-------------|
+| `--from <LIB>` | Source library to clone |
+| `--range <m> <n>` | Inclusive range of numbered targets (e.g. `1 25`) |
+| `--force` | Overwrite existing target libraries without prompting |
+| `--dry-run` | Preview actions without executing |
+
  
----
-
-## Lab Descriptions
-
-### Lab 101 — Document SAMCO with Bob
-**Mode**: 💬 Ask | **File**: [lab101-premium-discover-samco.md](lab101-premium-discover-samco.md)
-
-Use Bob's **Ask** mode with `read_member` and `search_qsys` to read live source from the `SAMSRC` library, produce program-level and business-level documentation, and generate an architecture document with a live ERD — all saved to `docs/`.
-
-**Premium features**: `read_member` · `search_qsys` · `/erd` · `search_ibm_i_docs_with_rag`
-
----
-
-### Lab 102 — Convert Fixed-Format RPG to Free
-**Mode**: ℹ️ IBM i Developer | **File**: [lab102-premium-fixed-to-free.md](lab102-premium-fixed-to-free.md)
-
-The Premium Package adds the **`convert_rpg_source` tool** and the **Fixed to Free Conversion Workflow** — a guided multi-step process that converts each specification group in order and outputs a compile status table. Source is read from the local workspace; the converted file is written back to the workspace and compiled to `SAMCOx`.
-
----
-
-### Lab 103 — Convert DDS to SQL 
-**Mode**: ℹ️ IBM i Developer | **File**: [lab103-premium-dds-to-sql-workflow.md](lab103-premium-dds-to-sql-workflow.md)
-
-The **DDS to SQL Conversion Impact Analysis** produces a full migration assessment for one DDS file before touching any code. It calls `QSYS2.GENERATE_SQL`, scans for static program references, and reports journaling, locks, and authority data as a structured impact report.
-
----
-
-### Lab 104 — Convert RLA to SQL and Optimize
-**Mode**: 🛢️ IBM i Database | **File**: [lab104-premium-rla-to-sql.md](lab104-premium-rla-to-sql.md)
-
-The dedicated **IBM i Database** mode converts the `CHAIN`+`getArtFamDesc()` two-operation pattern to a single SQL `SELECT … JOIN`, optimizes with index guidance, and visualizes schema relationships with `/erd SAMCOx`.
-
----
-
-### Lab 105 — Analyze Impact and Extend a Field Across the Full Stack
-**Mode**: ℹ️ IBM i Developer | **File**: [lab105-premium-impact-analysis.md](lab105-premium-impact-analysis.md)
-
-Uses the **live IBM i system catalog** (`QSYS2.SYSDEP`, `QSYS2.SYSCST`) to build a full dependency and recompile impact report for `ARTICLE` — then executes the change end-to-end: `ALTER TABLE` to widen `ARDESC`, display file update (enforcing 24×80 screen constraints), RPG program source update, and recompile of both DSPF and program targeting `SAMCOx`.
-
----
-
-### Lab 106 — Generate RPGUnit Tests for SAMCO
-**Mode**: ℹ️ IBM i Developer | **File**: [lab106-premium-test-rpgunit.md](lab106-premium-test-rpgunit.md)
-
-After modernizing SAMCO code, verify correctness with automated tests. `generate_rpg_unit_test_stub` reads exported procedures from the local workspace, generates scaffold test code, and recommends a storage location. `run_rpg_unit_test_suite` compiles and executes against `SAMCOx`.
-
 ---
 
 ## IBM i Developer Mode (ℹ️)

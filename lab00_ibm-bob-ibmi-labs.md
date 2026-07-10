@@ -314,7 +314,7 @@ Draft documentation: Build with vscode not documented yet. Dependency management
 - IBM i system (7.3 or higher recommended)
 - IBM Bob with [Code for IBM i](https://marketplace.visualstudio.com/items?itemName=HalcyonTechLtd.code-for-ibmi) extension + other related extensions.
 - SSH access to IBM i
-- User profile with appropriate authorities 
+- User profile with appropriate authorities
 - [Tobi](https://ibm.github.io/ibmi-tobi/#/) build tool installed: `/QOpenSys/pkgs/bin/makei`
 
 ### Building the Application
@@ -334,12 +334,12 @@ yum install tobi
 **3. Create Target Library:**
 
 ```bash
-# Create target library 
+# Create target library
 CRTLIB LIB(SAMCO) TEXT('SAMCO Application')
 ```
 or
 ```bash
-# In IBM i PASE (shell) 
+# In IBM i PASE (shell)
 system "CRTLIB LIB(SAMCO) TEXT('SAMCO Application')"
 ```
 **4. Clone and Open Project:**
@@ -363,7 +363,7 @@ The build process compiles all source types: RPG, COBOL, CL, DDS, SQL, etc.
 
 **5. Populate Db2 tables**
 
-Use [SAMCO/POPULATE_SAMCO_TABLES.sql](./SAMCO/POPULATE_SAMCO_TABLES.sql) to populate the tables with sample data. You can run this from the IBM i Navigator or from the IBM i Access Client Solutions. You can also use the following command in PASE: 
+Use [SAMCO/POPULATE_SAMCO_TABLES.sql](./SAMCO/POPULATE_SAMCO_TABLES.sql) to populate the tables with sample data. You can run this from the IBM i Navigator or from the IBM i Access Client Solutions. You can also use the following command in PASE:
 ```bash
 system "RUNSQLSTM SRCSTMF('/home/YOURUSER/IBM-i-Application-Modernization-with-Bob/SAMCO/POPULATE_SAMCO_TABLES.sql') COMMIT(*NONE)"
 ```
