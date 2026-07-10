@@ -15,7 +15,7 @@ Hands-on labs to learn IBM i modernization using IBM Bob AI assistant with the *
 </a>
 <br>
 ⭐ <em>Recommended!</em>⭐<br>
-Simple RPG/DDS app, source in QSYS — ideal for demos and half-day workshops. **Easy setup**
+Simple RPG/DDS app, source in QSYS — ideal for demos and half-day workshops. <b>Easy setup</b>
 </td>
 
 <td align="center" width="25%">
