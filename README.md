@@ -29,16 +29,6 @@ Multi-language app (RPG, COBOL, CL, C, C++, DDS, SQL) — best for 3h+ workshops
 </td>
 
 <td align="center" width="25%">
-<a href="./lab00_ibm-bob-ibmi-labs.md">
-<img src="pics/image-bob.png" width="200">
-<br>
-<strong>IBM Bob & IBM i (no PPi)</strong>
-</a>
-<br>
-Bonus exercises with minimal or no IBM i connection: Ansible/DevOps automation, Green Screen to React, IBM i MCP Server, and custom Bob extensions.
-</td>
-
-<td align="center" width="25%">
 <a href="./lab200-premium-package-ops-sysadmin.md">
 <img src="pics/bob-for-i-ops.jpg" width="200">
 <br>
@@ -46,6 +36,16 @@ Bonus exercises with minimal or no IBM i connection: Ansible/DevOps automation, 
 </a>
 <br>
 Bob for Ops — Beyond the SDLC, Bob for IBM i troubleshooting and Power Systems operations
+</td>
+
+<td align="center" width="25%">
+<a href="./lab01_ibm-bob-ibmi-labs.md">
+<img src="pics/image-bob.png" width="200">
+<br>
+<strong>Additional Bob & IBM i labs</strong>
+</a>
+<br>
+Bonus exercises with minimal or no IBM i connection: Ansible/DevOps automation, IBM i MCP Server, Bob Shell.
 </td>
 
 </tr>
@@ -68,7 +68,7 @@ The **Flight400** demo showcases the full Premium Package for i experience on a 
 | **Best for** | Quick demos, half-day workshops, first PPi contact | 3h+ workshops, mixed-language apps |
 | **Languages** | RPG (OPM/ILE), DDS | RPG, COBOL, CL, C, C++, DDS, SQL |
 | **Code location** | Native IBM i libraries (QSYS) — direct PPi connection, no extra scripting | Local workspace / Git — requires setup scripts to sync to source members |
-| **Setup** | Restore via SQL script, duplicate with `CPYLIB` per user | See [build instructions](./lab00_ibm-bob-ibmi-labs.md#building-the-application) |
+| **Setup** | Restore via SQL script, duplicate with `CPYLIB` per user | See [build instructions](./lab01_ibm-bob-ibmi-labs.md#building-the-application) |
 | **Repo** | [flight400-demo](https://github.com/bmarolleau/flight400-demo) | this repo |
 
 > **Flight400** lives natively in IBM i libraries — the primary PPi differentiator is that users connect directly to their IBM i source files from the Bob IDE, with no workspace sync required. This makes it the go-to choice for showing PPi features. For multi-user setups (shared LPAR), restore the app once then run `CPYLIB FROMLIB(FLGHT400) TOLIB(FLIGHT401)` (and so on) so each participant gets their own isolated copy.
