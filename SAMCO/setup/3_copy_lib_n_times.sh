@@ -22,6 +22,8 @@
 #       --base    <NAME>   Override base name for target libraries
 #                          Default: source library name with trailing digits stripped
 #       --force            Overwrite existing target libraries without prompting
+#       --lock-to-user     After each CPYLIB, revoke *PUBLIC and grant <PREFIX>n *ALL
+#       --user-prefix <P>  User name prefix used with --lock-to-user (required with --lock-to-user)
 #   -d, --dry-run          Print actions without executing
 #   -v, --verbose          Show full CL command output
 #   -h, --help             Show this help message
@@ -60,6 +62,8 @@ RANGE_N=""
 FORCE=false
 DRY_RUN=false
 VERBOSE=false
+LOCK_TO_USER=false
+USER_PREFIX=""
 
 TOTAL_OK=0
 TOTAL_ERR=0
@@ -78,7 +82,13 @@ fi
 # Helpers
 # ---------------------------------------------------------------------------
 usage() {
-  sed -n '/^# USAGE/,/^# NOTES/p' "$0" | grep '^#' | sed 's/^# \?//'
+  # Pure bash: print lines between USAGE and NOTES markers
+  local in_section=false
+  while IFS= read -r line; do
+    [[ "$line" =~ ^#\ USAGE ]] && in_section=true
+    [[ "$line" =~ ^#\ NOTES ]] && break
+    $in_section && echo "${line#'# '}"
+  done < "$0"
   exit 0
 }
 
@@ -143,6 +153,10 @@ while [[ $# -gt 0 ]]; do
       BASE_NAME=$(echo "$2" | tr '[:lower:]' '[:upper:]'); shift 2 ;;
     --force)
       FORCE=true;    shift ;;
+    --lock-to-user)
+      LOCK_TO_USER=true; shift ;;
+    --user-prefix)
+      USER_PREFIX=$(echo "$2" | tr '[:lower:]' '[:upper:]'); shift 2 ;;
     -d|--dry-run)
       DRY_RUN=true;  shift ;;
     -v|--verbose)
@@ -176,7 +190,11 @@ fi
 # Derive base name from source library if not provided:
 # strip trailing digits — e.g. SAMSRC1 -> SAMSRC, DEVLIB10 -> DEVLIB
 if [[ -z "$BASE_NAME" ]]; then
-  BASE_NAME=$(echo "$FROM_LIB" | sed 's/[0-9]*$//')
+  # Strip trailing digits using bash parameter expansion (no external binary needed)
+  BASE_NAME="$FROM_LIB"
+  while [[ "$BASE_NAME" =~ [0-9]$ ]]; do
+    BASE_NAME="${BASE_NAME%?}"
+  done
   if [[ -z "$BASE_NAME" ]]; then
     echo -e "${RED}ERROR: Could not derive base name from '${FROM_LIB}' (all digits?).${RESET}" >&2
     echo -e "       Use --base <NAME> to supply it explicitly." >&2
@@ -210,8 +228,9 @@ echo -e "  Source   : ${CYAN}${FROM_LIB}${RESET}"
 echo -e "  Base name: ${CYAN}${BASE_NAME}${RESET}"
 echo -e "  Range    : ${CYAN}${RANGE_M} → ${RANGE_N}${RESET}  (${#TARGETS[@]} librar$([ ${#TARGETS[@]} -eq 1 ] && echo y || echo ies))"
 echo -e "  Targets  : ${CYAN}${TARGETS[*]}${RESET}"
-$DRY_RUN && echo -e "  Mode     : ${YELLOW}DRY RUN — no changes will be made${RESET}"
-$FORCE   && echo -e "  Overwrite: ${YELLOW}--force active — existing targets will be deleted${RESET}"
+$DRY_RUN      && echo -e "  Mode     : ${YELLOW}DRY RUN — no changes will be made${RESET}"
+$FORCE        && echo -e "  Overwrite: ${YELLOW}--force active — existing targets will be deleted${RESET}"
+$LOCK_TO_USER && echo -e "  Security : ${CYAN}--lock-to-user active — each library locked to ${USER_PREFIX}n${RESET}"
 echo ""
 
 # ---------------------------------------------------------------------------
@@ -297,6 +316,21 @@ for TGT in "${TARGETS[@]}"; do
       stats=$(lib_stats "$TGT")
       echo -e "    ${GREEN}✓ ${TGT}: ${stats}${RESET}"
     fi
+
+    # -- Lock cloned library to its numbered user -----------------------------
+    if $LOCK_TO_USER; then
+      # Strip leading non-digits using bash parameter expansion
+      user_suffix="$TGT"
+      while [[ "$user_suffix" =~ ^[^0-9] ]]; do
+        user_suffix="${user_suffix#?}"
+      done
+      lock_user="${USER_PREFIX}${user_suffix}"
+      run_cl "  Revoke *PUBLIC on ${TGT}..." \
+        "QSYS/RVKOBJAUT OBJ(${TGT}) OBJTYPE(*LIB) USER(*PUBLIC)"
+      run_cl "  Grant ${lock_user} *ALL on ${TGT}..." \
+        "QSYS/GRTOBJAUT OBJ(${TGT}) OBJTYPE(*LIB) USER(${lock_user}) AUT(*ALL)"
+    fi
+
     TOTAL_OK=$((TOTAL_OK + 1))
   else
     TOTAL_ERR=$((TOTAL_ERR + 1))

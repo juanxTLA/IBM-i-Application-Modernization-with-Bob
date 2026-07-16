@@ -11,21 +11,18 @@
 #   development library so teams can work directly with SEU, RDi, or VS Code.
 #
 # USAGE
-#   bash deploy_to_qsys.sh [OPTIONS]
+#   bash deploy_to_qsys.sh -l <LIB> -b <PATH> [OPTIONS]
 #
 # OPTIONS
-#   -l, --library  <LIB>   Target library name (default: SAMSRC1)
-#   -b, --base     <PATH>  IFS root of the SAMCO project folder
-#                          (default: auto-detected from script location)
+#   -l, --library  <LIB>   Target library name (required)
+#   -b, --base     <PATH>  IFS root of the SAMCO project folder (required)
 #   -d, --dry-run          Print actions without executing them
 #   -v, --verbose          Show CL command output for every copy
 #   -h, --help             Show this help message
 #
 # EXAMPLES
-#   bash deploy_to_qsys.sh
-#   bash deploy_to_qsys.sh --library SAMSRC2
 #   bash deploy_to_qsys.sh --library SAMSRC2 --base /home/myuser/projects/SAMCO
-#   bash deploy_to_qsys.sh --dry-run
+#   bash deploy_to_qsys.sh -l SAMSRC2 -b /home/myuser/projects/SAMCO --dry-run
 #
 # NOTES
 #   - Member name  = filename prefix before the first '-' or '.',
@@ -49,11 +46,8 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Defaults
 # ---------------------------------------------------------------------------
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEFAULT_BASE="$(dirname "$SCRIPT_DIR")/SAMCO"   # <project_root>/SAMCO
-
-LIB="SAMSRC1"
-BASE="$DEFAULT_BASE"
+LIB=""
+BASE=""
 DRY_RUN=false
 VERBOSE=false
 
@@ -96,6 +90,16 @@ done
 # ---------------------------------------------------------------------------
 # Validate
 # ---------------------------------------------------------------------------
+if [[ -z "$LIB" ]]; then
+  echo -e "${RED}ERROR: --library (-l) is required.${RESET}" >&2
+  usage
+fi
+
+if [[ -z "$BASE" ]]; then
+  echo -e "${RED}ERROR: --base (-b) is required.${RESET}" >&2
+  usage
+fi
+
 if [[ ! -d "$BASE" ]]; then
   echo -e "${RED}ERROR: Base directory not found: $BASE${RESET}" >&2
   echo "       Use --base to specify the SAMCO project folder." >&2
@@ -164,10 +168,9 @@ copy_member() {
     > /dev/null 2>&1 || true
 
   # Copy stream file -> source member
-  local out
+  local out rc
   out=$(system "QSYS/CPYFRMSTMF FROMSTMF('${ifs_file}') TOMBR('${qsys_path}') \
-    MBROPT(*REPLACE) STMFCCSID(1208) DBFCCSID(37)" 2>&1)
-  local rc=$?
+    MBROPT(*REPLACE) STMFCCSID(1208) DBFCCSID(*FILE)" 2>&1) && rc=$? || rc=$?
 
   if [ $rc -ne 0 ]; then
     echo -e "    ${RED}*** ERROR: ${out}${RESET}"

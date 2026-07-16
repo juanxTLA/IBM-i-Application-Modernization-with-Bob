@@ -24,7 +24,7 @@
 -- ============================================================================
 -- 1. COUNTRY Table - Country codes and names
 -- ============================================================================
-SET SCHEMA SAMCOn;
+SET SCHEMA SAMCO;
 INSERT INTO COUNTRY (COID, COUNTR, COISO, COISO5, COISO1) VALUES
 ('FR', 'France', 'FRA', '250', '33'),
 ('US', 'United States', 'USA', '840', '1'),
